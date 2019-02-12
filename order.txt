@@ -65,7 +65,7 @@ git pull origin master --allow-unrelated-histories
 以后的
 git push origin master
 
-
+git clone git@github.com:daili0015/ModelFeast.git
 
 
 

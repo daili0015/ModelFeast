@@ -5,6 +5,10 @@ __pycache__/
 
 # C extensions
 *.so
+# model file
+*.pth
+*.zcy0016
+*.tar
 
 # Distribution / packaging
 .Python

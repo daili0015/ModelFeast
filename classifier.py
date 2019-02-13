@@ -76,7 +76,6 @@ class classifier(BaseModel):
         config = json.load(open(config_file))
 
         # setup data_loader instances
-        # setup data_loader instances
         data_cng = config['data_loader']['args']
         transform = None if 'transform' not in data_cng else data_cng['transform']
         if not transform and config["arch"]["args"]["img_size"]:
@@ -101,13 +100,6 @@ class classifier(BaseModel):
 
         # set classifier according to those
         clf.config = config
-        # clf.set_loss(loss)
-        # clf.set_metrics(metrics)
-        # clf.set_optimizer(optimizer)
-        # clf.set_lr_scheduler(lr_scheduler)
-        # clf.set_dataloader(data_loader, valid_data_loader)
-        # clf.set_resume(resume)
-
         clf.loss = loss
         clf.resume = resume
         clf.metrics = metrics

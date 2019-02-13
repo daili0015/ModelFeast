@@ -101,12 +101,20 @@ class classifier(BaseModel):
 
         # set classifier according to those
         clf.config = config
-        clf.set_loss(loss)
-        clf.set_metrics(metrics)
-        clf.set_optimizer(optimizer)
-        clf.set_lr_scheduler(lr_scheduler)
-        clf.set_dataloader(data_loader, valid_data_loader)
-        clf.set_resume(resume)
+        # clf.set_loss(loss)
+        # clf.set_metrics(metrics)
+        # clf.set_optimizer(optimizer)
+        # clf.set_lr_scheduler(lr_scheduler)
+        # clf.set_dataloader(data_loader, valid_data_loader)
+        # clf.set_resume(resume)
+
+        clf.loss = loss
+        clf.resume = resume
+        clf.metrics = metrics
+        clf.optimizer = optimizer
+        clf.lr_scheduler = lr_scheduler
+        clf.data_loader = data_loader
+        clf.valid_data_loader = valid_data_loader
 
         true_classes = len(clf.data_loader.classes)
         model_output = clf.config['arch']['args']['n_class']
@@ -133,29 +141,19 @@ class classifier(BaseModel):
         self.trainer.train()
 
     def train_from(self, resume):
-        self.set_resume(resume)
+        self.resume = resume
         self.train()
 
-    def set_resume(self, resume):
-        self.resume = resume
-    def set_loss(self, loss):
-        self.loss = loss
-    def set_metrics(self, metrics):
-        self.metrics = metrics
-    def set_model(self, model):
-        self.model = model
+    def set_optimizer(self, name="Adam", **kwargs):
+        self.config["optimizer"] = {"type": name, "args":kwargs}
+        optimizer_params = filter(lambda p: p.requires_grad, self.model.parameters())
+        self.optimizer = get_instance(torch.optim, 'optimizer', self.config, optimizer_params)
 
-    def set_optimizer(self, optimizer):
-        self.config["optimizer"] = {"type": optimizer.__class__.__name__}
-        self.optimizer = optimizer
+    def set_lr_scheduler(self, name="StepLR", **kwargs):
+        self.config["lr_scheduler"] = {"type": name, "args":kwargs}
+        self.lr_scheduler = get_instance(torch.optim.lr_scheduler, 'lr_scheduler', 
+            self.config, self.optimizer)
 
-    def set_lr_scheduler(self, lr_scheduler):
-        self.lr_scheduler = lr_scheduler
-
-    def set_dataloader(self, data_loader, valid_data_loader):
-        self.data_loader = data_loader
-        self.valid_data_loader = valid_data_loader
-        self.config["data_loader"] = {"type":self.data_loader.__class__.__name__}
 
     def autoset_dataloader(self, folder, batch_size=32, shuffle=True, validation_split=0.2, 
         num_workers=4, transform = None):
@@ -194,14 +192,16 @@ class classifier(BaseModel):
 if __name__ == '__main__':
     mode = 1
     if mode==1:
-        clf = classifier.init_from_config('/home/DL/ModelFeast/saved/xception/0213_113408/config.json')
+        clf = classifier.init_from_config('/home/DL/ModelFeast/saved/resnet18/0213_114719/config.json')
         # clf.train()
         # print(clf.config)
-        clf.train_from(r'/home/DL/ModelFeast/saved/xception/0213_113408/checkpoint_best.pth')
+        clf.set_optimizer("SGD", lr=1e-4, weight_decay=1e-4)
+        clf.set_lr_scheduler("StepLR", step_size=3, gamma=0.6)
+        clf.train_from(r'/home/DL/ModelFeast/saved/resnet18/0213_114719/checkpoint_best.pth')
+
     else:
-        clf = classifier(model='xception', n_classes=12, img_size=64, 
-            data_dir = "/home/DL/ModelFeast/data/plants", pretrained=True)
-        # clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=16)
-        # clf.set_trainer(epochs=50, save_dir="saved/", save_period=1)
-        clf.train()
-        # clf.train_from(r'/home/DL/ModelFeast/saved/xception/0212_141619/checkpoint_best.pth')
+        clf = classifier(model='resnet18', n_classes=12, img_size=128, pretrained=True)
+        clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=32)
+        clf.set_trainer(epochs=50, save_dir="saved/", save_period=2)
+        # clf.train()
+        clf.train_from(r'/home/DL/ModelFeast/saved/resnet18/0213_114719/checkpoint_best.pth')

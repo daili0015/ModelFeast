@@ -3,7 +3,7 @@
 # @Author: zcy
 # @Date:   2019-02-11 11:53:24
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-12 13:55:43
+# @Last Modified time: 2019-02-13 10:11:28
 import os
 import json
 import argparse
@@ -23,7 +23,7 @@ __all__ = ['classifier']
 class classifier(BaseModel):
     """ 可以训练 """
 
-    def __init__(self, model='xception', n_classes=10, img_size=(224, 224), 
+    def __init__(self, model='xception', n_classes=10, img_size=(224, 224), data_dir = None,
                     pretrained=False, pretrained_path="./pretrained/", default_init=True):
         """ 初始化时只初始化model model可以是string 也可以是自己创建的model """
         super(classifier, self).__init__()
@@ -64,6 +64,12 @@ class classifier(BaseModel):
             self.config["lr_scheduler"] = {"type": "StepLR", "args": {"step_size": 50, "gamma": 0.2 }}
             self.lr_scheduler = get_instance(torch.optim.lr_scheduler, 'lr_scheduler', 
                 self.config, self.optimizer)
+
+            self.set_trainer()
+
+        if data_dir:
+            self.autoset_dataloader(data_dir, batch_size=64, shuffle=True, validation_split=0.2, 
+                num_workers=4, transform = None)
 
     def init_from_config(config_file, resume=None):
         
@@ -151,6 +157,8 @@ class classifier(BaseModel):
         num_workers=4, transform = None):
         '''automatic generate data-loader from a given folder'''
 
+        assert os.path(folder).exists(), "data folder doesn't exit!!!"
+
         if not transform and self.config["arch"]["args"]["img_size"]:
             transform = self.config["arch"]["args"]["img_size"]
         self.data_loader = module_data.AutoDataLoader(folder, batch_size, shuffle, validation_split, 
@@ -173,14 +181,14 @@ class classifier(BaseModel):
 
 
 if __name__ == '__main__':
-    mode = 1
+    mode = 2
     if mode==1:
         clf = classifier.init_from_config('config2.json')
         # clf.train()
         clf.train_from(r'/home/DL/ModelFeast/saved/squeezenet/0212_144855/checkpoint_best.pth')
     else:
-        clf = classifier(model='xception', n_classes=12, img_size=64)
-        clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=16)
-        clf.set_trainer(epochs=50, save_dir="saved/", save_period=1)
+        clf = classifier(model='xception', n_classes=12, img_size=6, data_dir = "")
+        # clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=16)
+        # clf.set_trainer(epochs=50, save_dir="saved/", save_period=1)
         # clf.train()
         clf.train_from(r'/home/DL/ModelFeast/saved/xception/0212_141619/checkpoint_best.pth')

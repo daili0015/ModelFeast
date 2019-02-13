@@ -3,7 +3,7 @@
 # @Author: zcy
 # @Date:   2019-02-11 11:53:24
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-13 10:11:28
+# @Last Modified time: 2019-02-13 16:42:20
 import os
 import json
 import argparse
@@ -75,14 +75,25 @@ class classifier(BaseModel):
         
         config = json.load(open(config_file))
 
-        # setup data_loader instances
-        data_cng = config['data_loader']['args']
-        transform = None if 'transform' not in data_cng else data_cng['transform']
-        if not transform and config["arch"]["args"]["img_size"]:
-            config['data_loader']['args']['transform'] = config["arch"]["args"]["img_size"]
+        # setup data_loader config
+        if 'args' in config['data_loader']:
+            data_cng = config['data_loader']['args']
+            transform = None if 'transform' not in data_cng else data_cng['transform']
+            if not transform and config["arch"]["args"]["img_size"]:
+                config['data_loader']['args']['transform'] = config["arch"]["args"]["img_size"]
 
-        data_loader = get_instance(module_data, 'data_loader', config)
-        valid_data_loader = data_loader.split_validation()
+        try:
+            data_loader = get_instance(module_data, 'data_loader', config)
+            valid_data_loader = data_loader.split_validation()
+        except Exception as e:
+            print(e)
+            self.logger.warning('can not find data_loader in config file, please set data_loader manually')
+            data_loader = None
+            valid_data_loader = None
+        finally:
+            data_loader = get_instance(module_data, 'data_loader', config)
+            valid_data_loader = data_loader.split_validation()
+
         loss = getattr(module_loss, config['loss'])
         metrics = [getattr(module_metric, met) for met in config['metrics']]
 
@@ -187,6 +198,7 @@ if __name__ == '__main__':
         clf = classifier.init_from_config('/home/DL/ModelFeast/saved/resnet18/0213_114719/config.json')
         # clf.train()
         # print(clf.config)
+        clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=8)
         clf.set_optimizer("SGD", lr=1e-4, weight_decay=1e-4)
         clf.set_lr_scheduler("StepLR", step_size=3, gamma=0.6)
         clf.train_from(r'/home/DL/ModelFeast/saved/resnet18/0213_114719/checkpoint_best.pth')

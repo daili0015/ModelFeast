@@ -7,7 +7,6 @@ class WriterTensorboardX():
         if enable:
             log_path = writer_dir
             try:
-                print(log_path)
                 self.writer = importlib.import_module('tensorboardX').SummaryWriter(log_path)
             except ImportError:
                 message = "Warning: TensorboardX visualization is configured to use, but currently not installed on this machine. " + \

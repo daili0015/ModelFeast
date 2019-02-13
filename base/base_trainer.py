@@ -62,6 +62,7 @@ class BaseTrainer:
 
         if resume:
             self._resume_checkpoint(resume)
+
     
     def _prepare_device(self, n_gpu_use):
         """ 
@@ -178,6 +179,16 @@ class BaseTrainer:
         self.mnt_best = checkpoint['monitor_best']
 
         # load architecture params from checkpoint.
+        
+        if 'img_size' in checkpoint['config']['arch']['args'] and 'img_size' in self.config['arch']['args']:
+            # because a tuple store in json will change to a list
+            if isinstance(checkpoint['config']['arch']['args']['img_size'], list):
+                checkpoint['config']['arch']['args']['img_size'] = \
+                    tuple(checkpoint['config']['arch']['args']['img_size'])
+            if isinstance(self.config['arch']['args']['img_size'], list):                    
+                self.config['arch']['args']['img_size'] = \
+                    tuple(self.config['arch']['args']['img_size'] )
+
         if checkpoint['config']['arch'] != self.config['arch']:
             self.logger.warning('Warning: Architecture configuration given in config file is different from that of checkpoint. ' + \
                                 'This may yield an exception while state_dict is being loaded.')

@@ -88,8 +88,12 @@ class classifier(BaseModel):
         metrics = [getattr(module_metric, met) for met in config['metrics']]
 
         model_config = config['arch']['args']
-        clf = classifier(config['arch']['type'], model_config['n_class'], model_config['img_size'], 
-                    model_config['pretrained'], model_config['pretrained_path'], False)
+
+        clf = classifier(model=config['arch']['type'], n_classes=model_config['n_class'],
+                        img_size=model_config['img_size'], data_dir = None, 
+                        pretrained=model_config['pretrained'], 
+                        pretrained_path=model_config['pretrained_path'], 
+                        default_init=False)
 
         optimizer_params = filter(lambda p: p.requires_grad, clf.model.parameters())
         optimizer = get_instance(torch.optim, 'optimizer', config, optimizer_params)
@@ -157,19 +161,26 @@ class classifier(BaseModel):
         num_workers=4, transform = None):
         '''automatic generate data-loader from a given folder'''
 
-        assert os.path(folder).exists(), "data folder doesn't exit!!!"
+        assert os.path.exists(folder), "data folder doesn't exit!!!"
 
         if not transform and self.config["arch"]["args"]["img_size"]:
             transform = self.config["arch"]["args"]["img_size"]
         self.data_loader = module_data.AutoDataLoader(folder, batch_size, shuffle, validation_split, 
             num_workers, transform)
         self.valid_data_loader = self.data_loader.split_validation()
-        self.config["data_loader"] = {"type":self.data_loader.__class__.__name__}
 
         true_classes = len(self.data_loader.classes)
         model_output = self.config['arch']['args']['n_class']
         assert true_classes==model_output, "model分类数为{}，可是实际上有{}个类".format(
             model_output, true_classes)
+        self.config["data_loader"] = {"type":self.data_loader.__class__.__name__}
+        self.config["data_loader"]['args'] = {"data_dir": folder}
+        self.config["data_loader"]['args']['batch_size'] = batch_size
+        self.config["data_loader"]['args']['shuffle'] = shuffle
+        self.config["data_loader"]['args']['validation_split'] = validation_split
+        self.config["data_loader"]['args']['validation_split'] = validation_split
+        self.config["data_loader"]['args']['transform'] = transform
+
         # self.config["data_loader"]["class_to_idx"] = self.data_loader.class_to_idx
 
     def set_trainer(self, epochs=50, save_dir="saved/", save_period=2, verbosity=2, 
@@ -181,14 +192,16 @@ class classifier(BaseModel):
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 1
     if mode==1:
-        clf = classifier.init_from_config('config2.json')
+        clf = classifier.init_from_config('/home/DL/ModelFeast/saved/xception/0213_113408/config.json')
         # clf.train()
-        clf.train_from(r'/home/DL/ModelFeast/saved/squeezenet/0212_144855/checkpoint_best.pth')
+        # print(clf.config)
+        clf.train_from(r'/home/DL/ModelFeast/saved/xception/0213_113408/checkpoint_best.pth')
     else:
-        clf = classifier(model='xception', n_classes=12, img_size=6, data_dir = "")
+        clf = classifier(model='xception', n_classes=12, img_size=64, 
+            data_dir = "/home/DL/ModelFeast/data/plants", pretrained=True)
         # clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=16)
         # clf.set_trainer(epochs=50, save_dir="saved/", save_period=1)
-        # clf.train()
-        clf.train_from(r'/home/DL/ModelFeast/saved/xception/0212_141619/checkpoint_best.pth')
+        clf.train()
+        # clf.train_from(r'/home/DL/ModelFeast/saved/xception/0212_141619/checkpoint_best.pth')

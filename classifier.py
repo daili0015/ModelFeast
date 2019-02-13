@@ -75,6 +75,20 @@ class classifier(BaseModel):
         
         config = json.load(open(config_file))
 
+        model_config = config['arch']['args']
+
+        clf = classifier(model=config['arch']['type'], n_classes=model_config['n_class'],
+                        img_size=model_config['img_size'], data_dir = None, 
+                        pretrained=model_config['pretrained'], 
+                        pretrained_path=model_config['pretrained_path'], 
+                        default_init=False)
+
+        loss = getattr(module_loss, config['loss'])
+        metrics = [getattr(module_metric, met) for met in config['metrics']]
+        optimizer_params = filter(lambda p: p.requires_grad, clf.model.parameters())
+        optimizer = get_instance(torch.optim, 'optimizer', config, optimizer_params)
+        lr_scheduler = get_instance(torch.optim.lr_scheduler, 'lr_scheduler', config, optimizer)
+
         # setup data_loader config
         if 'args' in config['data_loader']:
             data_cng = config['data_loader']['args']
@@ -85,29 +99,11 @@ class classifier(BaseModel):
         try:
             data_loader = get_instance(module_data, 'data_loader', config)
             valid_data_loader = data_loader.split_validation()
-        except Exception as e:
-            print(e)
-            self.logger.warning('can not find data_loader in config file, please set data_loader manually')
+        except AttributeError:
+            clf.logger.warning('Can not match data loader in config file!!! please set data loader manually!!!')
             data_loader = None
             valid_data_loader = None
-        finally:
-            data_loader = get_instance(module_data, 'data_loader', config)
-            valid_data_loader = data_loader.split_validation()
-
-        loss = getattr(module_loss, config['loss'])
-        metrics = [getattr(module_metric, met) for met in config['metrics']]
-
-        model_config = config['arch']['args']
-
-        clf = classifier(model=config['arch']['type'], n_classes=model_config['n_class'],
-                        img_size=model_config['img_size'], data_dir = None, 
-                        pretrained=model_config['pretrained'], 
-                        pretrained_path=model_config['pretrained_path'], 
-                        default_init=False)
-
-        optimizer_params = filter(lambda p: p.requires_grad, clf.model.parameters())
-        optimizer = get_instance(torch.optim, 'optimizer', config, optimizer_params)
-        lr_scheduler = get_instance(torch.optim.lr_scheduler, 'lr_scheduler', config, optimizer)
+            pass
 
         # set classifier according to those
         clf.config = config
@@ -118,11 +114,6 @@ class classifier(BaseModel):
         clf.lr_scheduler = lr_scheduler
         clf.data_loader = data_loader
         clf.valid_data_loader = valid_data_loader
-
-        true_classes = len(clf.data_loader.classes)
-        model_output = clf.config['arch']['args']['n_class']
-        assert true_classes==model_output, "model分类数为{}，可是实际上有{}个类".format(
-            model_output, true_classes) 
         
         return clf
 
@@ -132,6 +123,13 @@ class classifier(BaseModel):
         assert all(callable(met) for met in self.metrics), "metrics is not callable!!"
         assert "trainer" in self.config, "trainer hasn't been configured!!"
         assert isinstance(self.data_loader, Iterable), "data_loader is not iterable!!"
+
+        # the num of classes in dataset must bet the same as model's output
+        if hasattr(clf.data_loader, 'classes'):
+            true_classes = len(clf.data_loader.classes)
+            model_output = clf.config['arch']['args']['n_class']
+            assert true_classes==model_output, "model分类数为{}，可是实际上有{}个类".format(
+                model_output, true_classes)
 
         if "name" not in self.config:
             self.config["name"] = "_".join(self.config["arch"]["type"], 
@@ -202,7 +200,6 @@ if __name__ == '__main__':
         clf.set_optimizer("SGD", lr=1e-4, weight_decay=1e-4)
         clf.set_lr_scheduler("StepLR", step_size=3, gamma=0.6)
         clf.train_from(r'/home/DL/ModelFeast/saved/resnet18/0213_114719/checkpoint_best.pth')
-
     else:
         clf = classifier(model='resnet18', n_classes=12, img_size=128, pretrained=True)
         clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=32)

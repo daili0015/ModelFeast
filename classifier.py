@@ -3,7 +3,7 @@
 # @Author: zcy
 # @Date:   2019-02-11 11:53:24
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-13 16:42:20
+# @Last Modified time: 2019-02-13 22:37:43
 import os
 import json
 import argparse
@@ -24,7 +24,8 @@ class classifier(BaseModel):
     """ 可以训练 """
 
     def __init__(self, model='xception', n_classes=10, img_size=(224, 224), data_dir = None,
-                    pretrained=False, pretrained_path="./pretrained/", default_init=True):
+                    pretrained=False, pretrained_path="./pretrained/", n_gpu=1,
+                    default_init=True):
         """ 初始化时只初始化model model可以是string 也可以是自己创建的model """
         super(classifier, self).__init__()
 
@@ -32,18 +33,24 @@ class classifier(BaseModel):
         self.data_loader = None
         self.valid_data_loader = None
         self.train_logger = Logger()
-        arch = {
-                "type": model, 
-                "args": {"n_class": n_classes, "img_size": img_size, 
-                "pretrained": pretrained, "pretrained_path": pretrained_path} 
-                }
-        self.config = {"name": model, "arch": arch, "n_gpu":1}
 
         if isinstance(model, str):
-            self.model = get_instance(model_zoo, 'arch', self.config)
+            arch = {
+                    "type": model, 
+                    "args": {"n_class": n_classes, "img_size": img_size, 
+                    "pretrained": pretrained, "pretrained_path": pretrained_path} 
+                    }
+            self.config = {"name": model, "arch": arch, "n_gpu":n_gpu}
+            self.model = get_instance(model_zoo, 'arch', self.config)       
             # self.model = getattr(model_zoo, model)(n_classes, img_size, pretrained, pretrained_path)
         elif callable(model):
-            self.model = model
+            model_name = model.__class__.__name__
+            arch = {
+                    "type": model_name, 
+                    "args": {"n_class": n_classes, "img_size": img_size} 
+                    }
+            self.config = {"name": model_name, "arch": arch, "n_gpu":n_gpu}
+            self.model = model         
         else:
             self.logger.info("input type is invalid, please set model as str or a callable object")
             raise Exception("model: wrong input error")
@@ -71,13 +78,21 @@ class classifier(BaseModel):
             self.autoset_dataloader(data_dir, batch_size=64, shuffle=True, validation_split=0.2, 
                 num_workers=4, transform = None)
 
-    def init_from_config(config_file, resume=None):
+    def init_from_config(config_file, resume=None, user_defined_model=None):
+        '''
+        if user_defined_model is callable, init classifier with the given model
+        otherwise, use model in modelfeast
+        '''
         
         config = json.load(open(config_file))
-
         model_config = config['arch']['args']
 
-        clf = classifier(model=config['arch']['type'], n_classes=model_config['n_class'],
+        if callable(user_defined_model):
+            kernal_model = user_defined_model
+        else:
+            kernal_model = config['arch']['type']
+
+        clf = classifier(model=kernal_model, n_classes=model_config['n_class'],
                         img_size=model_config['img_size'], data_dir = None, 
                         pretrained=model_config['pretrained'], 
                         pretrained_path=model_config['pretrained_path'], 

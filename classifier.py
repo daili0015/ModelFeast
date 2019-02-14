@@ -208,13 +208,13 @@ class classifier(BaseModel):
 if __name__ == '__main__':
     mode = 1
     if mode==1:
-        clf = classifier.init_from_config('/home/DL/ModelFeast/saved/resnet18/0213_114719/config.json')
-        # clf.train()
+        clf = classifier.init_from_config('config2.json')
+        clf.train()
         # print(clf.config)
-        clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=8)
-        clf.set_optimizer("SGD", lr=1e-4, weight_decay=1e-4)
-        clf.set_lr_scheduler("StepLR", step_size=3, gamma=0.6)
-        clf.train_from(r'/home/DL/ModelFeast/saved/resnet18/0213_114719/checkpoint_best.pth')
+        # clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=8)
+        # clf.set_optimizer("SGD", lr=1e-4, weight_decay=1e-4)
+        # clf.set_lr_scheduler("StepLR", step_size=3, gamma=0.6)
+        # clf.train_from(r'/home/DL/ModelFeast/saved/resnet18/0213_114719/checkpoint_best.pth')
     else:
         clf = classifier(model='resnet18', n_classes=12, img_size=128, pretrained=True)
         clf.autoset_dataloader(r"/home/DL/ModelFeast/data/plants", batch_size=32)

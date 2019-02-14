@@ -1,22 +1,22 @@
 {
-    "name": "squeezenet",
+    "name": "densenet121",
     "n_gpu": 1,
     
     "arch": {
-        "type": "squeezenet",
-        "args": {"n_class": 12,
-				"img_size": [128, 128],
-				"pretrained": true,
+        "type": "densenet121",
+        "args": {"n_class": 16,
+				"img_size": [256, 256],
+				"pretrained": false,
 				"pretrained_path": "./pretrained"
 				}
     },
     "data_loader": {
         "type": "AutoDataLoader",
         "args":{
-            "data_dir": "data/plants",
-            "batch_size": 128,
+            "data_dir": "data/cls",
+            "batch_size": 32,
             "shuffle": true,
-            "validation_split": 0.1,
+            "validation_split": 0.2,
             "num_workers": 4,
 	        "transform": null
 

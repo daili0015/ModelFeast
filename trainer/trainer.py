@@ -13,7 +13,10 @@ class Trainer(BaseTrainer):
     """
     def __init__(self, model, loss, metrics, optimizer, resume, config,
                  data_loader, valid_data_loader=None, lr_scheduler=None, 
-                 train_logger=None, tensorboard_image = False):
+                 train_logger=None, tensorboard_image = False, steps_update=1):
+        """
+        steps_update: how many steps to update parameters, use it when memory is not enough 
+        """    
         super(Trainer, self).__init__(model, loss, metrics, optimizer, resume, config, train_logger)
         self.config = config
         self.data_loader = data_loader
@@ -21,6 +24,7 @@ class Trainer(BaseTrainer):
         self.do_validation = self.valid_data_loader is not None
         self.lr_scheduler = lr_scheduler
 
+        self.steps_update = steps_update
         self.steps_to_verb = len(self.data_loader)//self.verbose_per_epoch
         self.steps_to_verb = 1 if self.steps_to_verb<=0 else self.steps_to_verb
 
@@ -53,11 +57,8 @@ class Trainer(BaseTrainer):
     
         total_loss = 0
         total_metrics = np.zeros(len(self.metrics))
-        cnt = 1
+
         for batch_idx, (data, target) in enumerate(self.data_loader):
-            cnt += 1
-            # if cnt>11:
-            #     break
             
             data, target = data.to(self.device), target.to(self.device)
 
@@ -65,7 +66,8 @@ class Trainer(BaseTrainer):
             output = self.model(data)
             loss = self.loss(output, target)
             loss.backward()
-            self.optimizer.step()
+            if  self.steps_update==1 or batch_idx%self.steps_update==0:
+                self.optimizer.step()
 
             self.writer.set_step((epoch - 1) * len(self.data_loader) + batch_idx)
             self.writer.add_scalar('loss', loss.item())

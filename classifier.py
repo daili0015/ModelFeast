@@ -4,6 +4,7 @@
 # @Date:   2019-02-11 11:53:24
 # @Last Modified by:   zcy
 # @Last Modified time: 2019-02-13 22:37:43
+
 import os
 import json
 import argparse
@@ -60,7 +61,7 @@ class classifier(BaseModel):
             self.config["loss"] = "cls_loss"
             self.loss = getattr(module_loss, self.config["loss"])
             
-            self.config["metrics"] = ["accuracy", "topK_accuracy"]
+            self.config["metrics"] = ["accuracy"]
             self.metrics = [getattr(module_metric, met) for met in self.config['metrics']]
 
             # build optimizer
@@ -140,7 +141,7 @@ class classifier(BaseModel):
         assert isinstance(self.data_loader, Iterable), "data_loader is not iterable!!"
 
         # the num of classes in dataset must bet the same as model's output
-        if hasattr(clf.data_loader, 'classes'):
+        if hasattr(self.data_loader, 'classes'):
             true_classes = len(clf.data_loader.classes)
             model_output = clf.config['arch']['args']['n_class']
             assert true_classes==model_output, "model分类数为{}，可是实际上有{}个类".format(

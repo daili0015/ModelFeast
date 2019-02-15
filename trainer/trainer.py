@@ -12,7 +12,8 @@ class Trainer(BaseTrainer):
         Inherited from BaseTrainer.
     """
     def __init__(self, model, loss, metrics, optimizer, resume, config,
-                 data_loader, valid_data_loader=None, lr_scheduler=None, train_logger=None):
+                 data_loader, valid_data_loader=None, lr_scheduler=None, 
+                 train_logger=None, tensorboard_image = False):
         super(Trainer, self).__init__(model, loss, metrics, optimizer, resume, config, train_logger)
         self.config = config
         self.data_loader = data_loader
@@ -22,6 +23,8 @@ class Trainer(BaseTrainer):
 
         self.steps_to_verb = len(self.data_loader)//self.verbose_per_epoch
         self.steps_to_verb = 1 if self.steps_to_verb<=0 else self.steps_to_verb
+
+        self.tensorboard_image = tensorboard_image # whether save img when train
 
     def _eval_metrics(self, output, target):
         acc_metrics = np.zeros(len(self.metrics))
@@ -76,7 +79,8 @@ class Trainer(BaseTrainer):
                     self.data_loader.n_samples,
                     100.0 * batch_idx / len(self.data_loader),
                     loss.item()))
-                self.writer.add_image('input', make_grid(data.cpu(), nrow=8, normalize=True))
+                if self.tensorboard_image:
+                    self.writer.add_image('input', make_grid(data.cpu(), nrow=8, normalize=True))
 
         log = OrderedDict()
         log['train_loss'] = total_loss / len(self.data_loader)
@@ -117,7 +121,8 @@ class Trainer(BaseTrainer):
                 self.writer.add_scalar('loss', loss.item())
                 total_val_loss += loss.item()
                 total_val_metrics += self._eval_metrics(output, target)
-                self.writer.add_image('input', make_grid(data.cpu(), nrow=8, normalize=True))
+                if self.tensorboard_image:
+                    self.writer.add_image('input', make_grid(data.cpu(), nrow=8, normalize=True))
         log = OrderedDict()
         log['val_loss'] = total_val_loss / len(self.valid_data_loader)
         log['val_metrics'] = (total_val_metrics / len(self.valid_data_loader)).tolist()

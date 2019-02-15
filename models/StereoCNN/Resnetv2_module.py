@@ -115,7 +115,7 @@ class PreActivationResNet(nn.Module):
                  block,
                  layers,
                  shortcut_type='B',
-                 num_classes=400,
+                 n_classes=400,
                  in_channels=3):
         self.inplanes = 64
         super(PreActivationResNet, self).__init__()
@@ -137,7 +137,7 @@ class PreActivationResNet(nn.Module):
         self.layer4 = self._make_layer(
             block, 512, layers[3], shortcut_type, stride=2)
 
-        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        self.fc = nn.Linear(512 * block.expansion, n_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
@@ -181,7 +181,7 @@ class PreActivationResNet(nn.Module):
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
-        print(x.shape)
+        # print(x.shape)
 
         # x = self.avgpool(x)
         x = F.adaptive_avg_pool3d(x, (1, 1, 1))
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     a = 64
     img_size=(a, a)
     model = PreActivationResNet(PreActivationBasicBlock, [2, 2, 2, 2],  \
-     num_classes=2, in_channels=1)
+     n_classes=2, in_channels=1)
     x = torch.randn(3, 1, 22, img_size[0], img_size[1])
     # (BatchSize, channels, depth, h, w)
     y = model(x)

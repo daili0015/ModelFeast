@@ -3,7 +3,7 @@
 # @Author: zcy
 # @Date:   2019-02-14 19:29:27
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-14 20:00:31
+# @Last Modified time: 2019-02-15 12:44:36
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -117,19 +117,22 @@ class PreActivationResNet(nn.Module):
                  shortcut_type='B',
                  n_classes=400,
                  in_channels=3):
-        self.inplanes = 64
+        
         super(PreActivationResNet, self).__init__()
+
+        first_channels = 64 if in_channels==3 else 32
+        self.inplanes = first_channels
         self.conv1 = nn.Conv3d(
             in_channels,
-            64,
+            first_channels,
             kernel_size=7,
             stride=(1, 2, 2),
             padding=(3, 3, 3),
             bias=False)
-        self.bn1 = nn.BatchNorm3d(64)
+        self.bn1 = nn.BatchNorm3d(first_channels)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool3d(kernel_size=(3, 3, 3), stride=2, padding=1)
-        self.layer1 = self._make_layer(block, 64, layers[0], shortcut_type)
+        self.layer1 = self._make_layer(block, first_channels, layers[0], shortcut_type)
         self.layer2 = self._make_layer(
             block, 128, layers[1], shortcut_type, stride=2)
         self.layer3 = self._make_layer(

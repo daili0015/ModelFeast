@@ -16,7 +16,7 @@ __all__ = [
 ]
 
 
-def resnetx50_3d(**kwargs):
+def resnext50_3d(**kwargs):
     """Constructs a ResNet-50 model.
     """
     model = ResNeXt(ResNeXtBottleneck, [3, 4, 6, 3], **kwargs)

@@ -44,7 +44,7 @@ def resnet101v2_3d(**kwargs):
     return model
 
 
-def resnet200v2_3d(**kwargs):
+def resnet152v2_3d(**kwargs):
     """Constructs a ResNet-101 model.
     """
     model = PreActivationResNet(PreActivationBottleneck, [3, 8, 36, 3],
@@ -52,7 +52,7 @@ def resnet200v2_3d(**kwargs):
     return model
 
 
-def resnet200_3dv2(**kwargs):
+def resnet200v2_3d(**kwargs):
     """Constructs a ResNet-101 model.
     """
     model = PreActivationResNet(PreActivationBottleneck, [3, 24, 36, 3],

@@ -80,6 +80,7 @@ class BaseTrainer:
         return device, list_ids
 
     def train(self):
+        not_improved_count = 0
         """
         Full training logic
         """

@@ -29,6 +29,6 @@ __all__ = [
             'densenet121', 'densenet169', 'densenet201', 'densenet161',
 
             'resnet18v2_3d', 'resnet34v2_3d', 'resnet50v2_3d', 'resnet101v2_3d',
-            'resnet152v2_3d', 'resnet200v2_3d',
+            'resnet152v2_3d', 'resnet200v2_3d'
             'resnext50_3d', 'resnext101_3d', 'resnext152_3d',
             ]

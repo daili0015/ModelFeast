@@ -7,7 +7,7 @@
 
 
 
-from models.StereoCNN.Densenet_module import *
+from models.StereoCNN.WideResnet_module import *
 
 
 __all__ = [

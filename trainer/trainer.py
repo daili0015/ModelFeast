@@ -13,7 +13,7 @@ class Trainer(BaseTrainer):
     """
     def __init__(self, model, loss, metrics, optimizer, resume, config,
                  data_loader, valid_data_loader=None, lr_scheduler=None, 
-                 train_logger=None, tensorboard_image = False, steps_update=1):
+                 train_logger=None, tensorboard_image = False):
         """
         steps_update: how many steps to update parameters, use it when memory is not enough 
         """    
@@ -24,7 +24,7 @@ class Trainer(BaseTrainer):
         self.do_validation = self.valid_data_loader is not None
         self.lr_scheduler = lr_scheduler
 
-        self.steps_update = steps_update
+        self.steps_update = self.config["trainer"]['steps_update']
         self.steps_to_verb = len(self.data_loader)//self.verbose_per_epoch
         self.steps_to_verb = 1 if self.steps_to_verb<=0 else self.steps_to_verb
 

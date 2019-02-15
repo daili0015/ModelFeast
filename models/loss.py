@@ -8,7 +8,6 @@ def cls_loss(output, target):
     return F.cross_entropy(output, target)
 
 
-
 if __name__ == '__main__':
     from types import FunctionType
     cls = cls_loss1()

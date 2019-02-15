@@ -43,6 +43,8 @@ class CtFolder(Dataset):
         folder = os.path.join(self.root, sampler)
         np_data = np.load(os.path.join(folder, "data.npy"))
 
+        np_data = (np_data-0.5)/0.5 # to [-1, 1]
+
         img = torch.from_numpy(np_data)
         img = img.unsqueeze(0)
         # (1, 30, 256, 256)

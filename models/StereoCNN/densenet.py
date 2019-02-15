@@ -3,19 +3,43 @@
 # @Author: zcy
 # @Date:   2019-02-15 13:02:27
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-15 15:28:52
+# @Last Modified time: 2019-02-15 15:36:26
 
 
 from models.StereoCNN.Densenet_module import *
 
-
 __all__ = [
-    'wideresnet50_3d',
+    'densenet121_3d', 'densenet169_3d', 'densenet201_3d', 'densenet264_3d'
 ]
 
 
-def wideresnet50_3d(**kwargs):
-    """Constructs a ResNet-50 model.
-    """
-    model = WideResNet(WideBottleneck, [3, 4, 6, 3], **kwargs)
+def densenet121_3d(**kwargs):
+    model = DenseNet(
+        growth_rate=32,
+        block_config=(6, 12, 24, 16),
+        **kwargs)
+    return model
+
+
+def densenet169_3d(**kwargs):
+    model = DenseNet(
+        growth_rate=32,
+        block_config=(6, 12, 32, 32),
+        **kwargs)
+    return model
+
+
+def densenet201_3d(**kwargs):
+    model = DenseNet(
+        growth_rate=32,
+        block_config=(6, 12, 48, 32),
+        **kwargs)
+    return model
+
+
+def densenet264_3d(**kwargs):
+    model = DenseNet(
+        growth_rate=32,
+        block_config=(6, 12, 64, 48),
+        **kwargs)
     return model

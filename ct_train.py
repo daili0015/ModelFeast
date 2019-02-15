@@ -23,10 +23,11 @@ from classifier import classifier
 
 clf = classifier(model='squeezenet', n_classes=2, img_size=512)
 
+clf.model = model_zoo.resnext50_3d(n_classes=2, in_channels=1)
+
 clf.data_loader = CtDataLoader('./data/train_imgset', batch_size=4, shuffle=True, \
     validation_split=0.3, num_workers=4)
 clf.valid_data_loader = clf.data_loader.split_validation()
-clf.model = model_zoo.resnet18_3dv2(n_classes=2, in_channels=1)
 
 clf.set_trainer(epochs=10, save_dir="saved/", save_period=1, verbosity=2, 
         verbose_per_epoch=20, monitor = "max val_accuracy", early_stop=10)

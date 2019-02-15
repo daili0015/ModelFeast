@@ -3,7 +3,7 @@
 # @Author: zcy
 # @Date:   2019-02-15 13:01:05
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-15 13:10:25
+# @Last Modified time: 2019-02-15 14:53:53
 
 import torch
 import torch.nn as nn
@@ -89,11 +89,11 @@ class DenseNet(nn.Module):
     """
 
     def __init__(self,
-                 growth_rate=32,
-                 block_config=(6, 12, 24, 16),
+                 growth_rate,
+                 block_config,
                  bn_size=4,
                  drop_rate=0,
-                 n_classes=1000,
+                 n_classes=10,
                  in_channels=3):
 
         super(DenseNet, self).__init__()
@@ -134,12 +134,12 @@ class DenseNet(nn.Module):
                 num_features = num_features // 2
 
         # Final batch norm
-        self.features.add_module('norm5', nn.BatchNorm2d(num_features))
+        self.features.add_module('norm5', nn.BatchNorm3d(num_features))
 
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
                 m.weight = nn.init.kaiming_normal_(m.weight, mode='fan_out')
-            elif isinstance(m, nn.BatchNorm3d) or isinstance(m, nn.BatchNorm2d):
+            elif isinstance(m, nn.BatchNorm3d):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
 

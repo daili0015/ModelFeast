@@ -30,5 +30,5 @@ __all__ = [
 
             'resnet18v2_3d', 'resnet34v2_3d', 'resnet50v2_3d', 'resnet101v2_3d',
             'resnet152v2_3d', 'resnet200v2_3d',
-            'resnet50_3d', 'resnet101_3d', 'resnet152_3d',
+            'resnext50_3d', 'resnext101_3d', 'resnext152_3d',
             ]

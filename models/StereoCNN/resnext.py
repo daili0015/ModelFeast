@@ -12,25 +12,25 @@ from models.StereoCNN.Resnext_module import *
 
 
 __all__ = [
-    'resnet50_3d', 'resnet101_3d', 'resnet152_3d'
+    'resnext50_3d', 'resnext101_3d', 'resnext152_3d'
 ]
 
 
-def resnet50_3d(**kwargs):
+def resnetx50_3d(**kwargs):
     """Constructs a ResNet-50 model.
     """
     model = ResNeXt(ResNeXtBottleneck, [3, 4, 6, 3], **kwargs)
     return model
 
 
-def resnet101_3d(**kwargs):
+def resnext101_3d(**kwargs):
     """Constructs a ResNet-101 model.
     """
     model = ResNeXt(ResNeXtBottleneck, [3, 4, 23, 3], **kwargs)
     return model
 
 
-def resnet152_3d(**kwargs):
+def resnext152_3d(**kwargs):
     """Constructs a ResNet-101 model.
     """
     model = ResNeXt(ResNeXtBottleneck, [3, 8, 36, 3], **kwargs)

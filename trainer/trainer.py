@@ -57,17 +57,20 @@ class Trainer(BaseTrainer):
     
         total_loss = 0
         total_metrics = np.zeros(len(self.metrics))
+        self.optimizer.zero_grad() # for gradient accumulation
 
         for batch_idx, (data, target) in enumerate(self.data_loader):
             
             data, target = data.to(self.device), target.to(self.device)
+            isUpdateOptim = self.steps_update==1 or (batch_idx+1)%self.steps_update==0
 
-            self.optimizer.zero_grad()
             output = self.model(data)
             loss = self.loss(output, target)
             loss.backward()
-            if  self.steps_update==1 or batch_idx%self.steps_update==0:
+
+            if isUpdateOptim:
                 self.optimizer.step()
+                self.optimizer.zero_grad()
 
             self.writer.set_step((epoch - 1) * len(self.data_loader) + batch_idx)
             self.writer.add_scalar('loss', loss.item())

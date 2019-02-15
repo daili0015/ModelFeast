@@ -17,27 +17,38 @@ class CtFolder(Dataset):
 
     def __init__(self, root):
         self.root = root
-        self.sample_list = [d for d in  os.listdir(self.root)]
-        # print(len(self.sample_list))
+        self.sample_list = list()
+        self.labels = list()
+        sample_number = 1500
+        pos = neg = 0
+        for d in  os.listdir(self.root):
+            folder = os.path.join(self.root, d)
+            file_list = os.listdir(folder)
+            if "1.txt" in file_list:
+                pos += 1
+                if pos<=sample_number:
+                    self.sample_list.append(d)
+                    self.labels.append(1)
+            elif "0.txt" in file_list:
+                neg += 1
+                if neg<=sample_number:
+                    self.sample_list.append(d)
+                    self.labels.append(0)
+            else:
+                raise Exception("no label file!", folder)
+
 
     def __getitem__(self, index):
         sampler = self.sample_list[index]
         folder = os.path.join(self.root, sampler)
-        file_list = os.listdir(folder)
-        if "1.txt" in file_list:
-            label = 1
-        elif "0.txt" in file_list:
-            label = 0
-        else:
-            raise Exception("no label file!", folder)
-
         np_data = np.load(os.path.join(folder, "data.npy"))
 
         img = torch.from_numpy(np_data)
         img = img.unsqueeze(0)
+        # (1, 30, 256, 256)
         # (channels, depth, h, w)
 
-        return img, label
+        return img, self.labels[index]
 
     def __len__(self):
         return len(self.sample_list)

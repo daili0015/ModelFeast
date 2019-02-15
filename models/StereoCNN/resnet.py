@@ -15,7 +15,7 @@ __all__ = [
     'resnet101_3d', 'resnet152_3d', 'resnet200_3d'
 ]
 
-def resnet10(**kwargs):
+def resnet10_3d(**kwargs):
     """Constructs a ResNet-18 model.
     """
     model = ResNet(BasicBlock, [1, 1, 1, 1], **kwargs)

@@ -147,7 +147,6 @@ class DenseNet(nn.Module):
         self.classifier = nn.Linear(num_features, n_classes)
 
     def forward(self, x):
-        print(x.shape)
         features = self.features(x)
         out = F.relu(features, inplace=True)
         # last_duration = int(math.ceil(self.sample_duration / 16))

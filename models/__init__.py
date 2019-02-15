@@ -18,6 +18,7 @@ from .classifiers.resnext import *
 from .StereoCNN.resnetv2 import *
 from .StereoCNN.resnext import *
 from .StereoCNN.densenet import *
+from .StereoCNN.resnet import *
 
 __all__ = [ 
             'vgg11',  'vgg13', 'vgg16', 'vgg19' ,
@@ -29,8 +30,14 @@ __all__ = [
             'resnext', 'resnext101_32x4d', 'resnext101_64x4d',
             'densenet121', 'densenet169', 'densenet201', 'densenet161',
 
+
             'resnet18v2_3d', 'resnet34v2_3d', 'resnet50v2_3d', 'resnet101v2_3d',
             'resnet152v2_3d', 'resnet200v2_3d'
+
             'resnext50_3d', 'resnext101_3d', 'resnext152_3d',
+
             'densenet121_3d', 'densenet169_3d', 'densenet201_3d', 'densenet264_3d',
+
+            'resnet10_3d', 'resnet18_3d', 'resnet34_3d', 
+            'resnet101_3d', 'resnet152_3d', 'resnet200_3d',            
             ]

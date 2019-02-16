@@ -41,7 +41,7 @@ class CtFolder(Dataset):
     def __getitem__(self, index):
         sampler = self.sample_list[index]
         folder = os.path.join(self.root, sampler)
-        np_data = np.load(os.path.join(folder, "data.npy"))
+        np_data = np.load(os.path.join(folder, "new_data.npy"))
 
         np_data = (np_data-0.5)/0.5 # to [-1, 1]
 

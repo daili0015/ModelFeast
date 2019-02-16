@@ -13,7 +13,7 @@ import torch.nn.functional as F
 import math
 from functools import partial
 
-__all__ = ['c1wideresnet50_3d']
+__all__ = ['c1wideresnet18_3d', 'c1wideresnet50_3d', 'c1wideresnet101_3d']
 
 
 def conv3x3x3(in_planes, out_planes, stride=1):
@@ -41,7 +41,7 @@ def downsample_basic_block(x, planes, stride):
 
 
 class WideBottleneck(nn.Module):
-    expansion = 8
+    expansion = 6
 
     def __init__(self, inplanes, planes, stride=1, downsample=None):
         super(WideBottleneck, self).__init__()
@@ -92,7 +92,7 @@ class WideResNet(nn.Module):
 
         super(WideResNet, self).__init__()
 
-        first_features = 16
+        first_features = 32
         self.inplanes = first_features
         # 1->16
         self.conv1 = nn.Conv3d(

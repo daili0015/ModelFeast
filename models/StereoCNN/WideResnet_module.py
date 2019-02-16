@@ -3,11 +3,10 @@
 # @Author: zcy
 # @Date:   2019-02-14 19:29:27
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-15 15:27:16
+# @Last Modified time: 2019-02-16 10:44:49
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 import math
 from functools import partial
 
@@ -33,7 +32,7 @@ def downsample_basic_block(x, planes, stride):
     if isinstance(out.data, torch.cuda.FloatTensor):
         zero_pads = zero_pads.cuda()
 
-    out = Variable(torch.cat([out.data, zero_pads], dim=1))
+    out = torch.cat([out.data, zero_pads], dim=1)
 
     return out
 
@@ -167,7 +166,7 @@ class WideResNet(nn.Module):
 if __name__ == '__main__':
     a = 64
     img_size=(a, a)
-    model = resnet50(n_classes=2, in_channels=1)
+    model = wideresnet50_3d(n_classes=2, in_channels=1)
     x = torch.randn(3, 1, 22, img_size[0], img_size[1])
     # (BatchSize, channels, depth, h, w)
     y = model(x)

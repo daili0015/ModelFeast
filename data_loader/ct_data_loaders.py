@@ -19,7 +19,7 @@ class CtFolder(Dataset):
         self.root = root
         self.sample_list = list()
         self.labels = list()
-        sample_number = 1500
+        sample_number = 3000
         pos = neg = 0
         for d in  os.listdir(self.root):
             folder = os.path.join(self.root, d)

@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Author: zcy
+# @Date:   2019-02-16 11:06:01
+# @Last Modified by:   zcy
+# @Last Modified time: 2019-02-16 11:33:27
+
 import logging
 import torch.nn as nn
 import numpy as np

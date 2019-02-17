@@ -3,6 +3,8 @@ import torch
 from torchvision.utils import make_grid
 from base import BaseTrainer
 from collections import OrderedDict
+from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
 
 class Trainer(BaseTrainer):
     """
@@ -87,6 +89,7 @@ class Trainer(BaseTrainer):
                 if self.tensorboard_image:
                     self.writer.add_image('input', make_grid(data.cpu(), nrow=8, normalize=True))
 
+        print("Already train a epoch")
         log = OrderedDict()
         log['train_loss'] = total_loss / len(self.data_loader)
         log['metrics'] = (total_metrics / len(self.data_loader)).tolist()
@@ -101,7 +104,45 @@ class Trainer(BaseTrainer):
         if self.lr_scheduler is not None:
             self.lr_scheduler.step()
 
+        print("cal_f1_score val")
+        self.cal_f1_score(dataset='val')
+        # print("cal_f1_score train")
+        # self.cal_f1_score(dataset='train')
+
         return log
+
+    def cal_f1_score(self, dataset='train'):
+        
+        if dataset=='train':
+            data_loader = self.data_loader
+        else:
+            data_loader = self.valid_data_loader
+
+        self.model.eval()
+        y_preds = y_trues = np.array([])
+        batches = len(data_loader)
+        total_loss = 0
+        with torch.no_grad():
+            for batch_idx, (data, target) in enumerate(data_loader):
+                data, target = data.to(self.device), target.to(self.device)
+                output = self.model(data)
+                loss = self.loss(output, target).data.cpu().numpy()
+                total_loss += loss
+
+                y_pred = output.data.cpu().max(1)[1].numpy()
+                y_true = target.data.cpu().numpy()
+
+                y_preds = np.append(y_preds, y_pred)
+                y_trues = np.append(y_trues, y_true)
+                if batch_idx%50==0: print("progress {}/{} ".format(batch_idx, batches))
+        total_loss = total_loss/len(data_loader)
+        res = f1_score(y_trues, y_preds, average='macro')
+        acc = accuracy_score(y_trues, y_preds)
+        print("{} dataset, f1 is {}, acc is {} loss is {}".format(dataset, res, \
+            acc, total_loss))
+        return res
+
+
 
     def _valid_epoch(self, epoch):
         """

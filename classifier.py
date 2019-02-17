@@ -156,6 +156,8 @@ class classifier(BaseModel):
             train_logger=self.train_logger)        
         self.trainer.train()
 
+        
+
     def train_from(self, resume):
         self.resume = resume
         self.train()

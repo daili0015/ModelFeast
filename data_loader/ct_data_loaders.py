@@ -6,12 +6,60 @@
 # @Last Modified time: 2019-02-12 14:34:20
 
 from torch.utils.data import Dataset
+from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 import torchvision.transforms.functional as TF
 import torchvision.transforms as T
 from base import BaseDataLoader
 import numpy as np
 import torch, os
+import pandas as pd 
+
+
+class Kfolder(Dataset): 
+
+    def __init__(self, root, csv_path):
+        
+        self.root = root
+        df = pd.read_csv(csv_path)
+        self.fnames = df['id']
+        self.labels = df['ret']
+
+    def __getitem__(self, index):
+
+        fname = self.fnames[index]
+        folder = os.path.join(self.root, fname)
+        np_data = np.load(os.path.join(folder, "new_data.npy"))
+        np_data = (np_data-0.5)/0.5 # to [-1, 1]
+        img = torch.from_numpy(np_data)
+        img = img.unsqueeze(0)
+        # (1, 30, 256, 256)
+        # (channels, depth, h, w)
+
+        return img, self.labels[index]
+
+    def __len__(self):
+        return len(self.fnames)
+
+def get_CTloader(root, csv_path, BachSize=4, num_workers=4):
+    trainset = Kfolder(root, csv_path)
+    #data/valid_data/airplane 
+    trainloader = DataLoader(trainset, batch_size = BachSize, shuffle = False,\
+         num_workers = num_workers)
+    trainloader.n_samples = len(trainset)
+    return trainloader
+
+class CtKLoader(BaseDataLoader):
+
+    def __init__(self, root, csv_path, batch_size, shuffle=False, validation_split=0, \
+     num_workers=4):
+        
+        self.data_dir = root
+        self.dataset = Kfolder(root, csv_path)
+
+        super(CtKLoader, self).__init__(self.dataset, batch_size, shuffle,\
+         validation_split, num_workers)
+    
 
 class CtFolder(Dataset): 
 

@@ -17,6 +17,16 @@ def accuracy(output, target):
         acc = np.array((y_pred.data-target.cpu().data)==0).mean() #变成np，可以直接np.array()
     return acc
 
+
+def accuracy_bce(output, target):
+    with torch.no_grad():
+        y_pred = torch.nn.functional.sigmoid(output)
+        y_pred = y_pred.data.cpu().numpy()
+        labels = target.data.cpu().numpy()
+        res = np.abs(y_pred-labels)<0.5
+        acc = res.mean()
+    return acc
+
 def top1_acc(output, target):
     with torch.no_grad():
         pred = torch.argmax(output, dim=1)

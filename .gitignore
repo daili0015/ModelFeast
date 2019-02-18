@@ -9,6 +9,14 @@ __pycache__/
 *.pth
 *.zcy0016
 *.tar
+*.dcm
+*.png
+*.jpg
+*.npy
+*.rar
+*.zip
+*.txt
+
 
 # Distribution / packaging
 .Python

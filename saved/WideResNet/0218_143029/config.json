@@ -1,0 +1,41 @@
+{
+    "n_gpu": 1,
+    "metrics": [
+        "accuracy"
+    ],
+    "trainer": {
+        "steps_update": 1,
+        "save_period": 1,
+        "monitor": "max val_accuracy",
+        "verbosity": 2,
+        "epochs": 8,
+        "save_dir": "saved/",
+        "tensorboardX": true,
+        "log_dir": "saved/runs",
+        "verbose_per_epoch": 20,
+        "early_stop": 3
+    },
+    "name": "WideResNet",
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "lr": 0.0001,
+            "weight_decay": 3e-05
+        }
+    },
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "step_size": 50,
+            "gamma": 0.2
+        }
+    },
+    "arch": {
+        "type": "WideResNet",
+        "args": {
+            "img_size": 256,
+            "n_class": 2
+        }
+    },
+    "loss": "cls_loss"
+}

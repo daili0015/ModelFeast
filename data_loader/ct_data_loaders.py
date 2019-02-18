@@ -29,8 +29,9 @@ class Kfolder(Dataset):
 
         fname = self.fnames[index]
         folder = os.path.join(self.root, fname)
-        np_data = np.load(os.path.join(folder, "new_data.npy"))
-        np_data = (np_data-0.5)/0.5 # to [-1, 1]
+        np_data = np.load(os.path.join(folder, "new_data2.npy"))
+        # np_data = (np_data-0.5)/0.5 # to [-1, 1]
+        np_data = (np_data-0.2)/0.25 
         img = torch.from_numpy(np_data)
         img = img.unsqueeze(0)
         # (1, 30, 256, 256)

@@ -40,7 +40,7 @@ def resize_np(images_zyx, desire_dim, desire_size, verbose=False):
 
 def dcm2png_dir(in_dir, out_dir, desire_dim, desire_size, verbose=False):
     mk_dir(out_dir)
-    data_path = os.path.join(out_dir, "new_data3.npy")
+    data_path = os.path.join(out_dir, "ori_data.npy")
     if os.path.exists(data_path):
         pass
         # return
@@ -54,7 +54,7 @@ def dcm2png_dir(in_dir, out_dir, desire_dim, desire_size, verbose=False):
 
     pixel_spacing = slices[0].PixelSpacing
     pixel_spacing.append(slices[0].SliceThickness)
-    image = rescale_images(image, pixel_spacing, 1, verbose=verbose)
+    image = rescale_images(image, pixel_spacing, 1.5, verbose=verbose)
 
     # image = resize_np(image, desire_dim, desire_size, verbose=verbose)
 
@@ -92,7 +92,17 @@ else:
     from_dir = "./data/test_dataset"
     to_dir = "./data/test_imgset"
 
+
+
+from_dir = "./data/train_dataset"
+to_dir = "./data/train_imgset"
+process_dataset(from_dir, to_dir, 96, (128, 128))
+
+from_dir = "./data/test_dataset"
+to_dir = "./data/test_imgset"   
+process_dataset(from_dir, to_dir, 96, (128, 128))
+
 # process_dataset(from_dir, to_dir, 96, (128, 128))
-process_dataset(from_dir, "./data/tmp_set", 96, (128, 128))
+# process_dataset(from_dir, "./data/tmp_set", 96, (128, 128))
 # dcm2png_dir("./data/test_dataset/0A8C06EE-5B19-4B53-BBFF-DB33C495DAC9", \
 #         "./data/tmp1_png", 30, (256, 256), True)

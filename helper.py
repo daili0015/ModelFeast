@@ -17,14 +17,17 @@ import cv2
 def normalize_hu(image):
     # MIN_BOUND = -1000.0
     # MAX_BOUND = 400.0
-    MIN_BOUND = -115.0
-    MAX_BOUND = 235.0 
-    image = (image - MIN_BOUND) / (MAX_BOUND - MIN_BOUND)
-    image[image > 1] = 1.
-    image[image < 0] = 0.
+
+    # MIN_BOUND = -115
+    # MAX_BOUND = 235
+    # image = (image - MIN_BOUND) / (MAX_BOUND - MIN_BOUND)
+    # image[image > 1] = 1.
+    # image[image < 0] = 0.
+
+
     # print( np.mean(image), np.std(image) )
     # print( image.shape, image.size )
-    return image.astype(np.float32)
+    return image.astype(np.int16)
 
 def get_pixels_hu(slices):
     image = np.stack([s.pixel_array for s in slices])

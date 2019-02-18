@@ -9,11 +9,11 @@ import sys
 sys.path.append("..")
 import pandas as pd 
 import numpy as np  
-from models import wideresnet50_3d as model_arch
+from models import c1wideresnet50_3d as model_arch
 from util import load_model, get_testloader
 import torch
 
-model_path = '/home/DL/ModelFeast/saved/WideResNet/0218_143029/checkpoint_best.pth'
+model_path = '/home/DL/ModelFeast/saved/WideResNet/0218_184348/checkpoint_best.pth'
 # sample = pd.read_csv('submit_example.csv')
 # print(sample.head())
 # print(sample.dtypes)

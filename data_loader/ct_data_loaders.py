@@ -14,24 +14,35 @@ from base import BaseDataLoader
 import numpy as np
 import torch, os
 import pandas as pd 
+from ct_augu import RandomCrop, Resize
 
 
 class Kfolder(Dataset): 
 
-    def __init__(self, root, csv_path):
+    def __init__(self, root, csv_path, train=True):
         
         self.root = root
         df = pd.read_csv(csv_path)
         self.fnames = df['id']
         self.labels = df['ret']
+        self.istrain = train
 
     def __getitem__(self, index):
 
         fname = self.fnames[index]
         folder = os.path.join(self.root, fname)
-        np_data = np.load(os.path.join(folder, "new_data2.npy"))
-        # np_data = (np_data-0.5)/0.5 # to [-1, 1]
-        np_data = (np_data-0.2)/0.25 
+        np_data = np.load(os.path.join(folder, "mask_data.npy"))
+        if self.istrain:
+            np_data = RandomCrop(np_data, ratio_range=0.8)
+            # np_data = Resize(np_data, size=(80, 128, 128))
+            np_data = Resize(np_data, size=(84, 143, 143), flip=0.5)
+
+            random_val = (np.random.randint(0, 200)-100)/100.0
+            np_data += random_val*0.02
+        else:
+            np_data = RandomCrop(np_data, ratio_range=0.8)
+            np_data = Resize(np_data, size=(84, 143, 143))
+
         img = torch.from_numpy(np_data)
         img = img.unsqueeze(0)
         # (1, 30, 256, 256)
@@ -42,8 +53,8 @@ class Kfolder(Dataset):
     def __len__(self):
         return len(self.fnames)
 
-def get_CTloader(root, csv_path, BachSize=4, num_workers=4):
-    trainset = Kfolder(root, csv_path)
+def get_CTloader(root, csv_path, BachSize=4, train=True, num_workers=4):
+    trainset = Kfolder(root, csv_path, train=train)
     #data/valid_data/airplane 
     trainloader = DataLoader(trainset, batch_size = BachSize, shuffle = False,\
          num_workers = num_workers)

@@ -115,12 +115,12 @@ class WideResNet(nn.Module):
         self.layer4 = self._make_layer(
             block, nStages[3], layers[3], shortcut_type, stride=2)
 
-        # self.fc = nn.Linear( nStages[3] * block.expansion, n_classes)
-        self.fc = nn.Sequential(
-            nn.Linear( nStages[3] * block.expansion, 15),
-            nn.Dropout(),
-            nn.Linear( 15, n_classes),
-            )
+        self.fc = nn.Linear( nStages[3] * block.expansion, n_classes)
+        # self.fc = nn.Sequential(
+        #     nn.Linear( nStages[3] * block.expansion, 15),
+        #     nn.Dropout(),
+        #     nn.Linear( 15, n_classes),
+        #     )
 
         for m in self.modules():
             if isinstance(m, nn.Conv3d):

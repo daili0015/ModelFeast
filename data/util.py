@@ -5,10 +5,13 @@
 # @Last Modified by:   zcy
 # @Last Modified time: 2019-02-16 11:33:27
 
-from torch.utils.data import Dataset
-from torch.utils.data import DataLoader
+
 import numpy as np
 import torch, os
+from torch.utils.data import Dataset
+from torch.utils.data import DataLoader
+from ct_augu import RandomCrop, Resize
+
 
 def load_model(model, resume):
     # load state dict
@@ -26,9 +29,15 @@ class CtSet(Dataset):
     def __getitem__(self, index):
         fname = self.sample_list[index]
         folder = os.path.join(self.root, fname)
-        np_data = np.load(os.path.join(folder, "new_data2.npy"))
-        # np_data = (np_data-0.5)/0.5 # to [-1, 1]
-        np_data = (np_data-0.2)/0.25 
+        np_data = np.load(os.path.join(folder, "norm_data.npy"))
+        # np_data = Resize(np_data, size=(80, 128, 128))
+
+        # np_data = RandomCrop(np_data, ratio_range=0.8)
+        np_data = RandomCrop(np_data, ratio_range=0.8)
+        np_data = Resize(np_data, size=(84, 143, 143))        
+        random_val = (np.random.randint(0, 200)-100)/100.0
+        np_data += random_val*0.01
+            
         img = torch.from_numpy(np_data)
         img = img.unsqueeze(0)
         # (1, 30, 256, 256)

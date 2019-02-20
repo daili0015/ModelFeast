@@ -7,16 +7,18 @@
 
 import sys
 sys.path.append("..")
+
 import pandas as pd 
 import numpy as np  
-from models import c1wideresnet50_3d as model_arch
+from models import densenet121_3d as model_arch
 from util import load_model, get_testloader
 import torch
 
-model_path = '/home/DL/ModelFeast/saved/WideResNet/0218_184348/checkpoint_best.pth'
+model_path = '/home/DL/ModelFeast/saved/DenseNet/0219_142734/checkpoint_best.pth'
 # sample = pd.read_csv('submit_example.csv')
 # print(sample.head())
 # print(sample.dtypes)
+
 
 print("modules has been loaded...")
 # load model
@@ -24,8 +26,9 @@ model = model_arch(n_classes=2, in_channels=1)
 load_model(model, model_path)
 print("model has been loaded...")
 # dataloader
-testloader = get_testloader('./test_imgset/', BachSize=32)
+testloader = get_testloader('/SSD/data/test_norm', BachSize=16)
 print("testloader has been loaded ...")
+
 
 
 rets = list()
@@ -65,4 +68,4 @@ df = pd.DataFrame({'id': ids, 'ret': rets})
 print(df.head())
 print(df.dtypes)
 print(df.ret.value_counts())
-df.to_csv('submission.csv', index=False)
+df.to_csv('submission7.csv', index=False)

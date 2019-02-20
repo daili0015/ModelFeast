@@ -5,38 +5,31 @@
 # @Last Modified by:   zcy
 # @Last Modified time: 2019-02-13 22:37:43
 
+# dcm图像转换成为numpy数组，并且对肝脏部分进行了分割,normalize
+# norm部分，归一化到0-1之间，只保留【 】之间的CT值
+
 import os, cv2
 import pydicom
 import scipy.misc
 import numpy as np
-from helper import get_pixels_hu, normalize_hu, rescale_images
+from helper import get_pixels_hu 
+#get_pixels_hu:将dcm图像数据转换为CT值（单位为Hu）
+from segment import get_masks
 
+def normalize_hu(image):
+    MIN_BOUND = -115
+    MAX_BOUND = 235
+    image = (image - MIN_BOUND) / (MAX_BOUND - MIN_BOUND)
+    image[image > 1] = 1.
+    image[image < 0] = 0.
+
+    # print( np.mean(image), np.std(image) )
+    # print( image.shape, image.size )
+    return image.astype(np.int16)
 
 def mk_dir(path):
     if not os.path.exists(os.path.join(path)):
         os.makedirs(os.path.join(path)) 
-
-def resize_np(images_zyx, desire_dim, desire_size, verbose=False):
-    if verbose:
-        print("Shape: ", images_zyx.shape)
-    # print "Resizing dim z"
-    res = cv2.resize(images_zyx, dsize=(images_zyx.shape[1], desire_dim), interpolation=cv2.INTER_LINEAR)
-    if verbose:
-        print("after resize dim: Shape is ", res.shape)
-
-    # resize w h 
-    res = res.swapaxes(0, 2)
-    res = res.swapaxes(0, 1)
-    assert res.shape[2] < 513
-
-    res = cv2.resize(res, dsize=desire_size, interpolation=cv2.INTER_LINEAR)
-
-    res = res.swapaxes(0, 2)
-    res = res.swapaxes(2, 1)
-    if verbose:
-        print("after resize w and h: Shape is ", res.shape)
-
-    return res
 
 def dcm2png_dir(in_dir, out_dir, desire_dim, desire_size, verbose=False):
     mk_dir(out_dir)
@@ -51,12 +44,6 @@ def dcm2png_dir(in_dir, out_dir, desire_dim, desire_size, verbose=False):
     slices.sort(key=lambda x: int(x.InstanceNumber))
 
     image = get_pixels_hu(slices)
-
-    pixel_spacing = slices[0].PixelSpacing
-    pixel_spacing.append(slices[0].SliceThickness)
-    image = rescale_images(image, pixel_spacing, 1.5, verbose=verbose)
-
-    # image = resize_np(image, desire_dim, desire_size, verbose=verbose)
 
     image = normalize_hu(image)
 
@@ -87,10 +74,10 @@ def process_dataset(datafolder, new_datafolder, desire_dim, desire_size):
 train = 0
 if train:
     from_dir = "./data/train_dataset"
-    to_dir = "./data/train_imgset"
+    to_dir = "./data/train_npdata"
 else:
     from_dir = "./data/test_dataset"
-    to_dir = "./data/test_imgset"
+    to_dir = "./data/test_npdata"
 
 
 

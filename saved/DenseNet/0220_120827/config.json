@@ -1,0 +1,41 @@
+{
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "weight_decay": 0.0003,
+            "lr": 0.0001
+        }
+    },
+    "metrics": [
+        "accuracy"
+    ],
+    "trainer": {
+        "save_period": 1,
+        "early_stop": 4,
+        "tensorboardX": true,
+        "epochs": 12,
+        "log_dir": "saved/runs",
+        "save_dir": "saved/",
+        "monitor": "max val_accuracy",
+        "verbosity": 2,
+        "verbose_per_epoch": 20,
+        "steps_update": 4
+    },
+    "name": "DenseNet",
+    "arch": {
+        "type": "DenseNet",
+        "args": {
+            "n_class": 2,
+            "img_size": 256
+        }
+    },
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "gamma": 0.2,
+            "step_size": 50
+        }
+    },
+    "n_gpu": 1,
+    "loss": "cls_loss"
+}

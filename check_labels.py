@@ -9,6 +9,7 @@ import pandas as pd
 import os
 
 data = pd.read_csv('./data/train_label.csv')
+data2 = pd.read_csv('./data/train2_label.csv')
 print(data.head(10))
 print(data.dtypes)
 # print(data['id'=='0AF1FAC8-2AD5-4CEC-9F3A-C737C7B82318'])
@@ -16,6 +17,24 @@ print(data.dtypes)
 # # print(e)
 
 print(data.ret.value_counts())
+print(data2.ret.value_counts())
+
+
+
+sample = pd.read_csv('./data/submit_example.csv')
+print(sample.head(10))
+print(len(sample))
+
+
+
+
+
+
+
+
+
+
+
 
 # for index, row in data.iterrows():
 #     name_id = row['id']

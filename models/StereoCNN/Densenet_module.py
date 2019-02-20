@@ -144,7 +144,13 @@ class DenseNet(nn.Module):
                 m.bias.data.zero_()
 
         # Linear layer
-        self.classifier = nn.Linear(num_features, n_classes)
+        # self.classifier = nn.Linear(num_features, n_classes)
+        self.classifier = nn.Sequential(
+            nn.Linear( num_features, 20),
+            nn.Dropout(),
+            nn.Linear( 20, n_classes),
+            ) 
+        print(self.classifier)       
 
     def forward(self, x):
         features = self.features(x)

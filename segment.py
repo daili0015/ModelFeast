@@ -17,33 +17,25 @@ def mk_dir(path):
 def get_masks(image, ori_np=None):
     masks = list()
     ious = list()
-    rot90_list = list()
     is_save = False
     for i in range(image.shape[0]):
         org_img = image[i]
-        mask, rot90 = get_mask(org_img)
+        mask = get_mask(org_img)
         masks.append(mask)
-        rot90_list.append(rot90)
         if i:
             iou = cal_iou(masks[i], masks[i-1])
             ious.append(iou)
 
-    if not all(iou>0.5 for iou in ious):
+    if not all(iou>0.6 for iou in ious):
         is_save = True
         print("\nwhat is the fuuuuuuuck?", ori_np)
-
-    if np.array(rot90_list).mean()>0.7:
-        is_save = True
-        print("\nrot90: ", ori_np)
-        for i in range(image.shape[0]):
-            image[i] = np.rot90(image[i], 1)
-            masks[i] = np.rot90(masks[i], 1)
 
     # mask images
     for i, mask in enumerate(masks):
         image[i] = image[i]*mask.astype(np.float32)
 
     return image, is_save
+
 
 def cal_iou(mask1, mask2):
     inter = mask1&mask2
@@ -68,22 +60,8 @@ def get_mask(input_img):
 
     hull = cv2.convexHull(contours[max_ind])
     cv2.fillConvexPoly(mask, hull, 1)
-    x,y,w,h = cv2.boundingRect(hull)
-    # print(x,y,w,h)
 
-    if h>w:
-        rot90 = 1
-    else:
-        rot90 = 0
-
-    cv2.rectangle(image, (x,y), (x+w, y+h), (255, 255, 255), 2)
-
-    return mask, rot90
-
-from_dir = "./train_imgset"
-to_dir = "/SSD/data/train_mask"
-process_dataset(from_dir, to_dir)
-
+    return mask
 
 # dcm2png_dir('./train_imgset/FD133D0F-CE49-4FE8-9B17-6093196C62DA', \
 #     './tmp_set/FD133D0F-CE49-4FE8-9B17-6093196C62DA')

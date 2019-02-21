@@ -34,6 +34,7 @@ def mk_dir(path):
 def dcm2png_dir(in_dir, out_dir, verbose=False):
     mk_dir(out_dir)
     data_path = os.path.join(out_dir, "seg_data.npy")
+    seg_path = os.path.join(out_dir, "seg.npy")
     if os.path.exists(data_path):
         pass
         # return
@@ -45,17 +46,21 @@ def dcm2png_dir(in_dir, out_dir, verbose=False):
 
     image = get_pixels_hu(slices)
 
-    print(image.dtype, image.max(), image.min())
     image = normalize_hu(image)
 
-    print(image.dtype, image.max(), image.min())
-    image, is_save = get_masks(image, data_path)
+    masks, max_mask, is_save = get_masks(image, data_path)
     # print(image.dtype, image.max(), image.min()) #should be float32 between [0.0, 1.0]
+    for i, mask in enumerate(masks):
+        image[i] = image[i]*mask
     
-    np.save(data_path, image) 
+    # print(image.dtype, image.max(), image.min())
+    np.save(data_path, image.astype(np.float16))
+    np.save(seg_path, max_mask)
+    # print(max_mask.dtype)
+    cv2.imwrite(os.path.join(out_dir, 'maxseg.png'), max_mask*255) 
 
-    is_save = True
     if is_save:
+        # image = image.astype(np.float32)
         for i in range(image.shape[0]):
             img_path = os.path.join(out_dir, str(i).rjust(4, '0') + ".png")
             org_img = image[i]
@@ -70,10 +75,11 @@ def process_dataset(datafolder, new_datafolder):
         cnt += 1
         old_folder = os.path.join(datafolder, folder)
         new_folder = os.path.join(new_datafolder, folder)
-        print(str(cnt)+" : convert data from"+old_folder+"\n  to"+new_folder)
+        # print(str(cnt)+" : convert data from"+old_folder+"\n  to"+new_folder)
         dcm2png_dir(old_folder, new_folder, verbose=True)
 
-        if cnt>5: return 
+        # if cnt>1: return 
+        if cnt%100==0: print("{}/{}".format(cnt, len(folder_list)))
 
 
 
@@ -87,13 +93,18 @@ if __name__ == '__main__':
     #     to_dir = "./data/test_segdata"
 
 
-    from_dir = "./data/train_dataset"
-    to_dir = "./data/train_imgset"
+    # from_dir = "./data/train_dataset"
+    # to_dir = "./data/train_imgset"
+    # process_dataset(from_dir, to_dir)
+
+    from_dir = "./data/train2_dataset"
+    to_dir = "./data/train2_imgset"
     process_dataset(from_dir, to_dir)
 
-    # from_dir = "./data/test_dataset"
-    # to_dir = "./data/test_imgset"   
-    # process_dataset(from_dir, to_dir)
+    # folder = 'BB79514D-6A0E-43FF-9B06-A600CD3302A8'
+    # old_folder = os.path.join(from_dir, folder)
+    # new_folder = os.path.join(to_dir, folder)
+    # dcm2png_dir(old_folder, new_folder, verbose=True)
 
     # dcm2png_dir("./data/test_dataset/0A8C06EE-5B19-4B53-BBFF-DB33C495DAC9", \
     #         "./data/tmp1_png", 30, (256, 256), True)

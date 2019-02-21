@@ -32,16 +32,16 @@ class Kfolder(Dataset):
         fname = self.fnames[index]
         folder = os.path.join(self.root, fname)
         np_data = np.load(os.path.join(folder, "mask_data.npy"))
+        to_size = (10, 256, 256)
         if self.istrain:
             np_data = RandomCrop(np_data, ratio_range=0.8)
-            # np_data = Resize(np_data, size=(80, 128, 128))
-            np_data = Resize(np_data, size=(84, 143, 143), flip=0.5)
+            np_data = Resize(np_data, size=to_size, flip=0.5)
 
             random_val = (np.random.randint(0, 200)-100)/100.0
             np_data += random_val*0.02
         else:
             np_data = RandomCrop(np_data, ratio_range=0.8)
-            np_data = Resize(np_data, size=(84, 143, 143))
+            np_data = Resize(np_data, size=to_size)
 
         img = torch.from_numpy(np_data)
         img = img.unsqueeze(0)

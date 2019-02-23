@@ -19,6 +19,7 @@ def get_masks(image, ori_np=None):
     ious = list()
     rot90_list = list()
     is_save = False
+    Rot_dir = 0
     for i in range(image.shape[0]):
         org_img = image[i]
         mask, rot90 = get_mask(org_img)
@@ -42,9 +43,9 @@ def get_masks(image, ori_np=None):
         print("rot90: ", ori_np, rot)
         print("direction is ", direction)
         if direction>0:
-            k=1
+            Rot_dir=k=1
         else:
-            k=3
+            Rot_dir=k=3
         for i in range(image.shape[0]):
             image[i] = np.rot90(image[i], k)
             masks[i] = np.rot90(masks[i], k)
@@ -58,7 +59,7 @@ def get_masks(image, ori_np=None):
     for i, mask in enumerate(masks):
         max_mask = max_mask|mask
 
-    return masks, max_mask, is_save
+    return masks, max_mask, is_save, Rot_dir
 
 
 def cal_iou(mask1, mask2):

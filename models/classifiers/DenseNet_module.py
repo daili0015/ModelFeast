@@ -88,7 +88,8 @@ class DenseNet(BaseModel):
         # First convolution 前置卷积层
         # 缩小1/4，如果尺寸为偶数，依然不完全匹配，会丢掉匹配不上的行列
         self.features = nn.Sequential(OrderedDict([
-            ('conv0', nn.Conv2d(3, num_init_features, kernel_size=7, stride=2, padding=3, bias=False)),
+            ('conv0', nn.Conv2d(30, num_init_features, kernel_size=7, stride=2, padding=3, bias=False)),
+            # ('conv0', nn.Conv2d(3, num_init_features, kernel_size=7, stride=2, padding=3, bias=False)),
             ('norm0', nn.BatchNorm2d(num_init_features)),
             ('relu0', nn.ReLU(inplace=True)),
             ('pool0', nn.MaxPool2d(kernel_size=3, stride=2, padding=1)),
@@ -142,3 +143,22 @@ class DenseNet(BaseModel):
         self.classifier = nn.Linear(self.conv_features, n_class)
         print("全连接层自动调整为：")
         print(self.classifier)
+
+    def cal_features(self, x):
+
+        super(DenseNet, self).isValidSize(x) #check the input size
+
+        features = self.features(x)
+        out = F.relu(features, inplace=True)
+        # 不管conv输出多少，统一输出1*1 
+        # 这是实现任意尺寸输入的关键
+        out = F.adaptive_avg_pool2d(out, (1, 1)).view(features.size(0), -1)
+
+        return out
+
+if __name__ == '__main__':
+    a = 64
+    img_size=(a, a)
+    net = densenet201(10, False)
+    y = net((torch.randn(2, 3, img_size[0], img_size[1])))
+    print(y.size())

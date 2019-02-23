@@ -73,7 +73,7 @@ def resize_np(images_zyx, desire_dim, desire_size, angle=0,\
 
     return res
 
-def RandomCrop(image_zyx, ratio_range=0.8):
+def RandomCropResize(image_zyx, ratio_range=0.8):
     '''crop [ratio, 1] from origin data'''
     ratio = np.random.randint(ratio_range*100, 100)/100.0
     ori_shape = image_zyx.shape
@@ -90,6 +90,20 @@ def RandomCrop(image_zyx, ratio_range=0.8):
                       x_start: x_start + x_length]
     return image
 
+def RandomCrop(image_zyx, crop_pixels=5):
+
+    ori_shape = image_zyx.shape
+    y_length = int(ori_shape[1])-crop_pixels
+    x_length = int(ori_shape[2])-crop_pixels
+
+    y_start = np.random.randint(0, crop_pixels)
+    x_start = np.random.randint(0, crop_pixels)
+    image = image_zyx[:,
+                      y_start: y_start + y_length,
+                      x_start: x_start + x_length]
+
+    return image 
+
 def Resize(image_zyx, size=(80, 128, 128), flip=0, angle=0):
     '''crop [ratio, 1] from origin data'''
     image = resize_np(image_zyx, size[0], size[1:], \
@@ -98,12 +112,12 @@ def Resize(image_zyx, size=(80, 128, 128), flip=0, angle=0):
 
 
 if __name__ == '__main__':
-    a = np.load('./to_dir/2/mask_data.npy')
+    a = np.load('/SSD/data/train_norm/0A2E9075-5C56-4E0D-AA2F-383002345D7C/norm_data.npy')
     print(a.shape)
-    # b = RandomCrop(a, 0.85)  
-    # print(b.shape)
-    while True:
-        b = Resize(a, flip=0.5) 
-    b = Resize(a)  
+    b = RandomCrop(a, crop_pixels=5)  
     print(b.shape)
+    # while True:
+    #     b = Resize(a, flip=0.5) 
+    # b = Resize(a)  
+    # print(b.shape)
 

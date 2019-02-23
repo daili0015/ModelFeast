@@ -9,10 +9,9 @@ import pydicom
 import scipy.misc
 import numpy as np
 from PIL import Image
-import os
+import os, json
 
 
-import json
 def loadFileInformation(f1, f2):
     ds = pydicom.read_file(f1)
     ds2 = pydicom.read_file(f2)
@@ -30,12 +29,14 @@ def loadFileInformation(f1, f2):
 # XRayTubeCurrent
 # WindowWidth, WindowCenter = 350, 60
 
+
 def get_wh_wc(file_name):
     '''return window center & window center of CT image'''
     ds = pydicom.read_file(file_name)
     WW = ds.data_element('WindowWidth')
     WC = ds.data_element('WindowCenter')
     return float(WW.value[0]), float(WC.value[0])
+
 
 def process_dir(folder):
     files = os.listdir(folder)
@@ -47,6 +48,7 @@ def process_dir(folder):
             max_ww = ww if max_ww<ww else max_ww
             max_wc = wc if max_wc<wc else max_wc
     return max_ww, max_wc
+
 
 def process_dataset(dataset):
     folders = os.listdir(dataset)
@@ -64,36 +66,40 @@ def process_dataset(dataset):
 
 def is_invert_folder(folder):
     '''return window center & window center of CT image'''
-    files = os.listdir(folder)
+    files = [f for f in os.listdir(folder) if ".dcm" in f]
+    files.sort(key=str)
     ds1, ds2 = pydicom.read_file(os.path.join(folder, files[0])), \
         pydicom.read_file(os.path.join(folder, files[1]))
-    invert_order = 1 if ds1.ImagePositionPatient[2] > ds1.ImagePositionPatient[2] else 0
+    invert_order = 1 if ds1.ImagePositionPatient[2] > ds2.ImagePositionPatient[2] else 0
     return invert_order
+
 
 def is_invert_dataset(dataset):
     folders = os.listdir(dataset)
     invert_cnt, normal_cnt = 0, 0
-    for folder in folders:
+    for cnt, folder in enumerate(folders):
         folder_path = os.path.join(dataset, folder)
         invert = is_invert_folder(folder_path)
         if invert:
             invert_cnt += 1
         else:
             normal_cnt += 1
+        if cnt%300==0: print("{}/{}".format(cnt, len(folders)), invert_cnt, normal_cnt)
     return invert_cnt, normal_cnt
+    # cos_value = (slices[0].ImageOrientationPatient[0])
+    # cos_degree = round(math.degrees(math.acos(cos_value)),2)
 
-
-    cos_value = (slices[0].ImageOrientationPatient[0])
-    cos_degree = round(math.degrees(math.acos(cos_value)),2)
 
 import math
 def is_flip_folder(folder):
     '''return window center & window center of CT image'''
     files = os.listdir(folder)
+    files.sort(key=str)
     ds = pydicom.read_file(os.path.join(folder, files[0]))
     cos_value = (ds.ImageOrientationPatient[0])
     cos_degree = round(math.degrees(math.acos(cos_value)),2)
     return cos_degree>0.0
+
 
 def is_flip_dataset(dataset):
     folders = os.listdir(dataset)

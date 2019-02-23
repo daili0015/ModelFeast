@@ -34,6 +34,7 @@ def loadFileInformation(f1, f2):
             print(key, "    ------------    ", emt, "--------",emt2, "\n")
         # print(ds.SpacingBetweenSlices) #5
         # print(ds.PatientSex) #'M'
+        # print(ds.PatientAge) #'M'
         # print(ds.CTDIvol)
         
 # SliceLocation
@@ -41,14 +42,14 @@ def loadFileInformation(f1, f2):
 # WindowWidth, WindowCenter - 350, 60
 # PatientSex
 # PatientAge
-
 # ImagePositionPatient? ImageOrientationPatient?
 
 # loadFileInformation(in_path)
-f1 = '/home/DL/ModelFeast/data/test_dataset/0A7FE6C1-BA87-48EA-B582-5EE5C8FBFC75/a9e676a8-5273-4959-a091-712c796dfe3f_00001.dcm'
-f2 = '/home/DL/ModelFeast/data/test_dataset/0A7520F7-113A-49D8-A423-6FB5EDBCA108/73b584e1-c61c-4e8f-8984-69539fd1d074_00006.dcm'
+f1 = '/home/DL/ModelFeast/data/test_dataset/0A1BE884-925A-4B8F-B078-0863E2B4C66B/f29b9fd4-6106-431a-8e5f-1c50412a0268_00001.dcm'
+f2 = '/home/DL/ModelFeast/data/test_dataset/0AB6CFF3-4F1A-412A-8AE4-8B35A0EF5D5F/2a5db1ee-9731-48f8-991b-2c983143a98a_00002.dcm'
 loadFileInformation(f1, f2)
 # folder = './data/0A5D6760-1730-48DB-A988-FCE0FF1D6C43'
 # print(is_invert_dataset('./data/test_dataset'))
+# print(is_flip_dataset('./data/train_dataset'))
 # print(process_dataset('./data/test_dataset'))
 # print(a)

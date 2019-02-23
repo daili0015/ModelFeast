@@ -161,7 +161,6 @@ class BaseTrainer:
         }
         filename = os.path.join(self.checkpoint_dir, 'checkpoint-epoch{}.pth'.format(epoch))
         torch.save(state, filename)
-        torch.save(self.model.state_dict(), 'param.pth')
         self.logger.info("Saving checkpoint: {} ...".format(filename))
         if save_best:
             best_path = os.path.join(self.checkpoint_dir, 'checkpoint_best.pth')

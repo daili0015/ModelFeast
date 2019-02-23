@@ -21,7 +21,7 @@ def normalize_hu(image):
     image = (image - MIN_BOUND) / (MAX_BOUND - MIN_BOUND)
     image[image > 1] = 1.
     image[image < 0] = 0.
-    # image = (image-0.195)/0.265
+    image = (image-0.5)/0.5
 
     # print( np.mean(image), np.std(image) )
     # print( image.shape, image.size )
@@ -47,21 +47,24 @@ def resize_np(images_zyx, desire_dim, desire_size, verbose=False):
 
 def dcm2png_dir(in_dir, out_dir, desire_dim, desire_size, verbose=False):
     mk_dir(out_dir)
-    ori_np = os.path.join(in_dir, "ori_data.npy")
+    ori_np = os.path.join(in_dir, "crop_data.npy")
     norm_np = os.path.join(out_dir, "norm_data.npy")
+    mask = np.load(ori_np.replace('crop_data', 'seg'))
     image = np.load(ori_np)
-    # image = resize_np(image, desire_dim, desire_size, verbose=verbose)
 
+    image = resize_np(image, desire_dim, desire_size, verbose=verbose)
     image = normalize_hu(image)
+    mask = cv2.resize(mask, dsize=desire_size, interpolation=cv2.INTER_LINEAR)
+    image = image*mask
 
     # print(image.dtype, image.max(), image.min()) #should be float32 between [0.0, 1.0]
     
     np.save(norm_np, image) 
 
-    for i in range(image.shape[0]):
-        img_path = os.path.join(out_dir, str(i).rjust(4, '0') + ".png")
-        org_img = image[i]
-        cv2.imwrite(img_path, org_img * 255)
+    # for i in range(image.shape[0]):
+    #     img_path = os.path.join(out_dir, str(i).rjust(4, '0') + ".png")
+    #     org_img = image[i]
+    #     cv2.imwrite(img_path, org_img * 255)
     return 
 
 
@@ -73,22 +76,24 @@ def process_dataset(datafolder, new_datafolder, desire_dim, desire_size):
         cnt += 1
         old_folder = os.path.join(datafolder, folder)
         new_folder = os.path.join(new_datafolder, folder)
-        print(str(cnt)+" : convert data from"+old_folder+"\n  to"+new_folder)
+        # print(str(cnt)+" : convert data from"+old_folder+"\n  to"+new_folder)
         dcm2png_dir(old_folder, new_folder, desire_dim, desire_size, \
             verbose=False)
+        if cnt%100==0: print(cnt)
+        # if cnt>2: 
+        #     return 
 
-        if cnt>2: 
-            return 
+# from_dir = "./train_cropset"
+# to_dir = "/SSD/data/train_norm"
+# process_dataset(from_dir, to_dir, 30, (250, 190))
 
-from_dir = "./train_imgset"
-to_dir = "/SSD/data/train_norm"
-process_dataset(from_dir, to_dir, 96, (128, 128))
+# from_dir = "./train2_cropset"
+# to_dir = "/SSD/data/train2_norm"
+# process_dataset(from_dir, to_dir, 30, (250, 190))
 
-# from_dir = "./test_imgset"
-# to_dir = "/SSD/data/tmpset"   
-# process_dataset(from_dir, to_dir, 96, (128, 128))
-
-
+from_dir = "/SSD/data/test_segdata"
+to_dir = "/SSD/data/test_norm"
+process_dataset(from_dir, to_dir, 30, (250, 190))
 
 # dcm2png_dir('./train_imgset/DD507B2B-D6C7-49D3-B466-C84BBE038BBA', 
 #     './tmp_set/DD507B2B-D6C7-49D3-B466-C84BBE038BBA', 

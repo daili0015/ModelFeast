@@ -1,0 +1,46 @@
+{
+    "trainer": {
+        "log_dir": "saved/runs",
+        "verbose_per_epoch": 20,
+        "verbosity": 2,
+        "early_stop": 4,
+        "save_period": 1,
+        "steps_update": 1,
+        "monitor": "max val_accuracy",
+        "save_dir": "saved/",
+        "epochs": 12,
+        "tensorboardX": true
+    },
+    "name": "densenet161",
+    "loss": "cls_loss",
+    "arch": {
+        "args": {
+            "pretrained": false,
+            "pretrained_path": "./pretrained/",
+            "img_size": [
+                185,
+                245
+            ],
+            "n_class": 2
+        },
+        "type": "densenet161"
+    },
+    "metrics": [
+        "accuracy"
+    ],
+    "lr_scheduler": {
+        "args": {
+            "step_size": 50,
+            "gamma": 0.2
+        },
+        "type": "StepLR"
+    },
+    "n_gpu": 1,
+    "optimizer": {
+        "args": {
+            "lr": 0.0001,
+            "weight_decay": 0.0003
+        },
+        "type": "Adam"
+    }
+}

@@ -149,7 +149,7 @@ class DenseNet(nn.Module):
             nn.Linear( num_features, 20),
             nn.Dropout(),
             nn.Linear( 20, n_classes),
-            ) 
+            )
         print(self.classifier)       
 
     def forward(self, x):
@@ -166,6 +166,11 @@ class DenseNet(nn.Module):
         out = self.classifier(out)
         return out
 
+    def cal_features(self, x):
+        features = self.features(x)
+        out = F.relu(features, inplace=True)
+        out = F.adaptive_avg_pool3d(out, (1, 1, 1)).view(features.size(0), -1)
+        return out
 
 
 def densenet121_3d(**kwargs):
@@ -179,8 +184,9 @@ if __name__ == '__main__':
     a = 64
     img_size=(a, a)
     model = densenet121_3d(n_classes=2, in_channels=1)
-    x = torch.randn(3, 1, 22, img_size[0], img_size[1])
+    x = torch.randn(3, 1, 30, img_size[0], img_size[1])
     # (BatchSize, channels, depth, h, w)
-    y = model(x)
+    y = model.cal_features(x)
+
     print(y.size())
 

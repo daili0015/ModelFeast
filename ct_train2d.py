@@ -12,7 +12,7 @@ import argparse
 import torch
 from collections import Iterable
 
-from data_loader.ct_data_loaders import get_CTloader2
+from data_loader.ct_data_loaders2d import get_CTloader2d
 import models.loss as module_loss
 import models.metric as module_metric
 import models as model_zoo
@@ -22,25 +22,24 @@ from classifier import classifier
 
 
 KofNsplit = 1
-model = model_zoo.densenet201_3d(n_classes=2, in_channels=1)
 
-clf = classifier(model=model, n_classes=2, img_size=256)
+clf = classifier(model='densenet201', n_classes=2, img_size=(190-5, 250-5), pretrained=False)
 
-clf.data_loader = get_CTloader2('/SSD/data/train_norm', \
+clf.data_loader = get_CTloader2d('/SSD/data/train_norm', \
     './data/ksplit/train{}.csv'.format(KofNsplit), \
     '/SSD/data/train2_norm', \
     './data/ksplit2/train{}.csv'.format(KofNsplit), \
-    BachSize=8, train=True, num_workers=4)
-clf.valid_data_loader = get_CTloader2('/SSD/data/train_norm', \
+    BachSize=32, train=True, num_workers=4)
+clf.valid_data_loader = get_CTloader2d('/SSD/data/train_norm', \
     './data/ksplit/test{}.csv'.format(KofNsplit), \
     '/SSD/data/train2_norm', \
     './data/ksplit2/test{}.csv'.format(KofNsplit), \
-    BachSize=8, train=False, num_workers=4)
+    BachSize=32, train=False, num_workers=4)
 
 
 clf.set_trainer(epochs=12, save_dir = "saved/", save_period=1, verbosity=2, 
         verbose_per_epoch=20, monitor = "max val_accuracy", early_stop=4,
-        steps_update=2)
+        steps_update=1)
 
 
 

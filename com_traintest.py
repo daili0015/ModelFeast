@@ -58,20 +58,20 @@ def analyse_dataset(train=0):
     return df
 
 # analyse_dcm('./data/0A3C0BD2-708C-4AD5-BDAE-9100AD9248CC/6fa81381-7ae6-4974-b4e0-b7d933e8bf34_00001.dcm')    
-analyse_dataset(0)
-print(no_age)
+# analyse_dataset(0)
+# print(no_age)
 
 # test = pd.read_csv('trainset.csv')
 # test['sex'] = test['sex'].astype(int)
 # print(test['sex'].value_counts())
 # print(test.head())
 
-import pandas as pd 
-train = pd.read_csv('./data/trainset.csv')
-train.describe()
+
+# train = pd.read_csv('./data/trainset.csv')
+# train.describe()
 
 test = pd.read_csv('./data/testset.csv')
-test.describe()
+print(test.describe())
 
 # print(test['sex'].value_counts())
 # print(train['sex'].value_counts())

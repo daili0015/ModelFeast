@@ -20,7 +20,7 @@ def load_model(model, resume):
     model.load_state_dict(state_dict)
 
 
-class CtSet(Dataset): 
+class CtSet2(Dataset): 
 
     def __init__(self, root):
         self.root = root
@@ -31,12 +31,12 @@ class CtSet(Dataset):
         folder = os.path.join(self.root, fname)
         np_data = np.load(os.path.join(folder, "norm_data.npy")).astype(np.float32)
 
+        # get 10 channels
         np_data = RandomCrop(np_data, crop_pixels=5)
         # random_val = (np.random.randint(0, 200)-100)/100.0
         # np_data += random_val*0.01
             
         img = torch.from_numpy(np_data)
-        img = img.unsqueeze(0)
         # (1, 30, 256, 256)
         # (channels, depth, h, w)
 
@@ -45,8 +45,8 @@ class CtSet(Dataset):
     def __len__(self):
         return len(self.sample_list)
 
-def get_testloader(root, BachSize=8):
-    testset = CtSet(root)
+def get_testloader2d(root, BachSize=8):
+    testset = CtSet2(root)
     #data/valid_data/airplane 
     testloader = DataLoader(testset, batch_size = BachSize, \
         shuffle = False, num_workers = 4)

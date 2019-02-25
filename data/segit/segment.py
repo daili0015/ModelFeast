@@ -68,6 +68,7 @@ def cal_iou(mask1, mask2):
     return inter.sum()/union.sum()
 
 def get_mask(input_img):
+    
     image = (input_img*255).astype(np.uint8)
     mask = np.zeros(input_img.shape, dtype=np.uint8)
     # print(image.dtype, np.mean(image), np.std(image))

@@ -201,7 +201,7 @@ class classifier(BaseModel):
 
     def set_trainer(self, epochs=50, save_dir="saved/", save_period=2, verbosity=2, 
         verbose_per_epoch=100, monitor = "max val_accuracy", early_stop=10, 
-        tensorboardX=True, log_dir="saved/runs", steps_update=1):
+        tensorboardX=False, log_dir="saved/runs", steps_update=1):
         self.config["trainer"] = {"epochs":epochs, "save_dir":save_dir, "save_period":save_period,
             "verbosity":verbosity, "verbose_per_epoch":verbose_per_epoch, "monitor":monitor, 
             "early_stop":early_stop, "tensorboardX":tensorboardX, "log_dir":log_dir,

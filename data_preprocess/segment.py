@@ -90,6 +90,7 @@ def get_mask(input_img):
 
     if h>w:
         rot90 = find_rot_direction(hull, image)
+        # rot90 = 1
         pass
     else:
         rot90 = 0

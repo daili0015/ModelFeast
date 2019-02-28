@@ -20,7 +20,7 @@ def normalize_hu(image):
     return image.astype(np.float32)
 
 dcm = '/home/DL/ModelFeast/data/train_dataset/DD507B2B-D6C7-49D3-B466-C84BBE038BBA'
-info = '/home/DL/ModelFeast/data_preprocess/tmpset/DD507B2B-D6C7-49D3-B466-C84BBE038BBA'
+info = '/SSD/data/train_cropset/DD507B2B-D6C7-49D3-B466-C84BBE038BBA'
 data, masks, label = load_from_folder(info_folder=info, dcm_folder=dcm)
 data = normalize_hu(data)
 data = data*masks

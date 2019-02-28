@@ -14,6 +14,7 @@ def load_from_folder(info_folder, dcm_folder):
     data = load_dcm(dcm_folder)
     masks = load_masks(info_folder)
     crop, rot_k, invert, label = load_info(info_folder)
+    # print(rot_k, invert, label)
     x,y,w,h = crop
     if rot_k:
         for i in range(len(data)):

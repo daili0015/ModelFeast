@@ -20,12 +20,34 @@ def bone_normalize_hu(image):
     # MIN_BOUND = -115
     # MAX_BOUND = 235    
     MIN_BOUND = 0
-    MAX_BOUND = 1000 
+    MAX_BOUND = 1000
     image = (image - MIN_BOUND) / (MAX_BOUND - MIN_BOUND)
     image[image > 1] = 1.
     image[image < 0] = 0.
 
     return image.astype(np.float32)
+
+def fat_normalize_hu(image):
+    res1 = np.zeros_like(image)
+    res2 = np.zeros_like(image)
+    res1[image>-120]=1
+    res2[image<-5]=1
+    mask = res1&res2
+    # mask = ~mask.astype(np.bool)
+    return mask
+
+def fat_seg(img):
+    mask = fat_normalize_hu(img)
+    mask = (mask*255).astype(np.uint8)
+    # cv2.imwrite('mask.png', mask)
+
+    # kernel = np.ones((2, 2),np.uint8)
+    # mask = cv2.erode(mask,kernel,iterations = 1)
+    # kernel = np.ones((3, 3),np.uint8)
+    # mask = cv2.dilate(mask, kernel, iterations = 1)
+
+    return mask, None
+
 
 def bone_seg(img):
 
@@ -96,9 +118,8 @@ def dcm2png_dir(in_dir, out_dir):
     max_mask = max_mask[y:y+h, x:x+w]
 
     # bone seg
-    # ori_image = bone_normalize_hu(ori_image)
     for i in range(ori_image.shape[0]):
-        mask, binary = bone_seg(ori_image[i])
+        mask, binary = fat_seg(ori_image[i])
         # img_path = os.path.join(out_dir, "binary" + str(i).rjust(4, '0') + ".png")
         # cv2.imwrite(img_path, binary)
         img_path = os.path.join(out_dir, "mask" + str(i).rjust(4, '0') + ".png")
@@ -116,7 +137,7 @@ def process_dataset(datafolder, new_datafolder):
         print(str(cnt)+" : process data from"+old_folder+"\n  to"+new_folder)
         dcm2png_dir(old_folder, new_folder)
 
-        if cnt>7: break
+        if cnt>13: break
         if cnt%100==0: print("{}/{}".format(cnt, len(folder_list)))
 
 

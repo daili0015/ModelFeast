@@ -90,11 +90,11 @@ def get_mask(input_img):
     # print(x,y,w,h)
 
     if h>w:
-        rot90 = find_rot_direction(hull, image)
+        # rot90 = find_rot_direction(hull, image)
+        rot90 = 0
         pass
     else:
         rot90 = 0
-    # rot90 = 1
     # rot90 如果不需要旋转则为0 否则逆时针为1 顺时针为-1
     return mask, rot90
 

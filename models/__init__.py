@@ -21,6 +21,7 @@ from .StereoCNN.densenet import *
 from .StereoCNN.resnet import *
 from .StereoCNN.wideresnet import *
 from .StereoCNN.c1wideresnet import *
+from .StereoCNN.i3d import *
 
 __all__ = [ 
             'vgg11',  'vgg13', 'vgg16', 'vgg19' ,
@@ -45,5 +46,7 @@ __all__ = [
 
             'wideresnet50_3d',
 
-            'c1wideresnet18_3d', 'c1wideresnet50_3d', 'c1wideresnet101_3d',           
+            'c1wideresnet18_3d', 'c1wideresnet50_3d', 'c1wideresnet101_3d', 
+
+            'i3d50', 'i3d101', 'i3d152',           
             ]

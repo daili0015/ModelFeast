@@ -48,6 +48,8 @@ def dcm2png_dir(in_dir, out_dir, verbose=False):
     if invert:
         slices = slices[::-1]
         print("invert it")
+    else:
+        print("don't invert it")
 
     image = get_pixels_hu(slices)
     ori_image = image.copy()
@@ -116,7 +118,7 @@ def process_dataset(datafolder, new_datafolder, csv=None):
             f = open(os.path.join(new_folder, str(label)+".txt"), 'w')
             f.close()
 
-        if cnt>17: break
+        if cnt>7: break
         if cnt%100==0: print("{}/{}".format(cnt, len(folder_list)))
 
 
@@ -146,7 +148,7 @@ if __name__ == '__main__':
     csv = "../train2_label.csv"
     process_dataset(from_dir, to_dir, csv)
 
-    # folder = 'DC0792E7-1B5C-41DF-8639-1F2DBFAE2461'
-    # old_folder = os.path.join(from_dir, folder)
-    # new_folder = os.path.join(to_dir, folder)
+    # folder = '0A3C0BD2-708C-4AD5-BDAE-9100AD9248CC'
+    # old_folder = os.path.join('./data/', folder)
+    # new_folder = os.path.join("./res_data", folder)
     # dcm2png_dir(old_folder, new_folder, verbose=True)

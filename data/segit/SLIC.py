@@ -14,7 +14,6 @@ class SLIC:
         self.img = img
         self.mask = mask
         self.height, self.width = img.shape[:2]
-        # self._convertToLAB()
         self.labimg = np.copy(self.img)
         self.step = step
         self.nc = 2
@@ -22,10 +21,9 @@ class SLIC:
         self.FLT_MAX = 1000000
         self.ITERATIONS = 10
 
-    def generateSuperPixels(self):
-        self._initData()
+    def updata_based_spx(self, ITERATIONS):
         indnp = np.mgrid[0:self.height,0:self.width].swapaxes(0,2).swapaxes(0,1)
-        for i in range(self.ITERATIONS):
+        for i in range(ITERATIONS):
             self.distances = self.FLT_MAX * np.ones(self.img.shape[:2])
             # do not compute on background
             self.distances[self.mask==0]=0
@@ -45,7 +43,6 @@ class SLIC:
                 cropimg = self.labimg[ylow : yhigh , xlow : xhigh]
                 colordiff = cropimg - self.labimg[int(self.centers[j][2]), int(self.centers[j][1])]
                 colorDist =np.square(colordiff)
-
 
                 yy, xx = np.ogrid[ylow : yhigh, xlow : xhigh]
                 pixdist = ((yy-self.centers[j][2])**2 + (xx-self.centers[j][1])**2)**0.5
@@ -71,6 +68,70 @@ class SLIC:
                     else:
                         self.centers[k][ind] /= np.sum(idx)
 
+
+
+
+    def generateSuperPixels(self):
+        self._initData()
+        self.updata_based_spx(3)
+        # self.createConnectivity()
+        # self.updata_based_pixel(2)
+        self.createConnectivity()
+
+    def isOnEdge(self, y, x):
+        dx8 = [-1, 0, 1, 0, -1, -1,  1, 1]
+        dy8 = [0, -1, 0, 1, -1,  1, -1, 1]
+        Neighbors = []
+        for i in range(len(dx8)):
+            new_y, new_x = y+dy8[i], x+dx8[i]
+            if new_x>=self.width or new_x<0 or new_y>=self.height or new_y<0:
+                continue
+            if self.mask[new_y, new_x]==0: 
+                continue
+            if self.clusters[new_y, new_x]!=self.clusters[y, x]:
+                Neighbors.append(int(self.clusters[new_y, new_x]))
+        return Neighbors
+
+    def updata_based_pixel(self, ITERATIONS):
+        indnp = np.mgrid[0:self.height,0:self.width].swapaxes(0,2).swapaxes(0,1)
+        for i in range(ITERATIONS):
+            self.distances = self.FLT_MAX * np.ones(self.img.shape[:2])
+            # do not compute on background
+            self.distances[self.mask==0]=0
+            for y in range(self.height):
+                for x in range(self.width):
+                    if self.mask[y][x] == 0:  
+                        continue
+                    Neighbors = self.isOnEdge(y, x)
+                    if not Neighbors:
+                        continue
+                    # update this pixel
+                    for j in Neighbors:
+
+                        # print(y, x, j)
+                        colordiff = abs(self.labimg[y, x] - self.centers[j][0])
+                        pixdist = ((y-self.centers[j][2])**2 + (x-self.centers[j][1])**2)**0.5
+                        color_ratio = 0.3
+                        dist = colordiff*color_ratio + pixdist*(1-color_ratio)
+
+                        if dist<self.distances[y, x]:
+                            self.distances[y, x] = dist
+                            self.clusters[y, x] = j
+            # update spx
+            for k in range(len(self.centers)):
+                idx = (self.clusters == k)
+                colornp = self.labimg[idx]
+                distnp = indnp[idx]
+                self.centers[k][0:1] = np.sum(colornp, axis=0)
+                sumy, sumx = np.sum(distnp, axis=0)
+                self.centers[k][1:] = sumx, sumy
+                for ind in range(len(self.centers[k])):
+                    if np.sum(idx)==0:
+                        self.centers[k][ind]=0
+                    else:
+                        self.centers[k][ind] /= np.sum(idx)  
+
+
     def _initData(self):
         self.clusters = -1 * np.ones(self.img.shape[:2])
         self.distances = self.FLT_MAX * np.ones(self.img.shape[:2])
@@ -86,6 +147,49 @@ class SLIC:
                 centers.append(center)
         self.center_counts = np.zeros(len(centers))
         self.centers = np.array(centers)
+
+        # assign pixel data
+        indnp = np.mgrid[0:self.height,0:self.width].swapaxes(0,2).swapaxes(0,1)
+        self.distances = self.FLT_MAX * np.ones(self.img.shape[:2])
+        # do not compute on background
+        self.distances[self.mask==0]=0
+        for j in range(self.centers.shape[0]):
+            xlow, xhigh = int(self.centers[j][1] - self.step), int(self.centers[j][1] + self.step)
+            ylow, yhigh = int(self.centers[j][2] - self.step), int(self.centers[j][2] + self.step)
+
+            if xlow <= 0:
+                xlow = 0
+            if xhigh > self.width:
+                xhigh = self.width
+            if ylow <=0:
+                ylow = 0
+            if yhigh > self.height:
+                yhigh = self.height
+
+            yy, xx = np.ogrid[ylow : yhigh, xlow : xhigh]
+            pixdist = ((yy-self.centers[j][2])**2 + (xx-self.centers[j][1])**2)**0.5
+            dist = (pixdist/self.ns)**2
+
+            distanceCrop = self.distances[ylow : yhigh, xlow : xhigh]
+
+            idx = dist < distanceCrop
+            distanceCrop[idx] = dist[idx]
+            self.distances[ylow : yhigh, xlow : xhigh] = distanceCrop
+            self.clusters[ylow : yhigh, xlow : xhigh][idx] = j
+
+        for k in range(len(self.centers)):
+            idx = (self.clusters == k)
+            colornp = self.labimg[idx]
+            distnp = indnp[idx]
+            self.centers[k][0:1] = np.sum(colornp, axis=0)
+            sumy, sumx = np.sum(distnp, axis=0)
+            self.centers[k][1:] = sumx, sumy
+            for ind in range(len(self.centers[k])):
+                if np.sum(idx)==0:
+                    self.centers[k][ind]=0
+                else:
+                    self.centers[k][ind] /= np.sum(idx)        
+
 
     def createConnectivity(self):
         label = 0
@@ -152,7 +256,23 @@ class SLIC:
         img_BGR = cv2.cvtColor(img_show, cv2.COLOR_GRAY2BGR)
         for i in range(len(contours)):
             img_BGR[contours[i][0], contours[i][1]] = (0, 0, 255)
+        self.img_show = img_BGR
         return img_BGR
+
+    # def average_data(self, k=3):
+    #     for y in range(self.height):
+    #         for x in range(self.width):
+    #             if self.mask[y][x] == 0:  
+    #                 continue
+    #             sum_val = 0.0
+    #             cnt = 0
+    #             for dy in range(-k//2, k//2, 1):
+    #                 for dx in range(-k//2, k//2, 1):
+    #                     if y+dy<0 or y+dy>=self.height or x+dx<0 or x+dx>=self.width:
+    #                         continue
+    #                     cnt += 1
+    #                     sum_val += self.img[y+dy][x+dx]
+    #             self.img[y][x] = sum_val/cnt
 
     def _findLocalMinimum(self, center):
         min_grad = self.FLT_MAX
@@ -167,6 +287,21 @@ class SLIC:
                     loc_min = [i, j]
         return loc_min
 
+    def mask_based_spx(self, ref_mask, threshold=0.5):
+        mask = np.zeros_like(ref_mask)
+        for k in range(self.clusters.shape[0]):
+            idx = (self.clusters == k)
+            if np.sum(idx)<=0:
+                continue
+            idx_inside_mask = idx*ref_mask
+            ratio = np.sum(idx_inside_mask)/np.sum(idx)
+            if ratio>threshold:
+                # mask[idx] = 1
+                mask = mask | idx
+            # print(np.sum(idx_inside_mask), np.sum(idx), ratio)
+
+        return mask.astype(np.bool)
+
 def mk_dir(path):
     if not os.path.exists(os.path.join(path)):
         os.makedirs(os.path.join(path))
@@ -174,10 +309,10 @@ def mk_dir(path):
 def spx_img(img, mask, nr_superpixels):
     step = int((img.shape[0]*img.shape[1]/nr_superpixels)**0.5)
     slic = SLIC(img, mask, step)
+    # slic.average_data(k=3)
     slic.generateSuperPixels()
-    slic.createConnectivity()
     img_show = slic.displayContours(color=255)
-    return img_show
+    return slic
 
 def spx_folder(in_dir, out_dir, nr_superpixels):
     mk_dir(out_dir)
@@ -205,7 +340,7 @@ def process_dataset(datafolder, new_datafolder, nr_superpixels):
         print(str(cnt)+" : convert data from"+old_folder+"\n  to"+new_folder)
         spx_folder(old_folder, new_folder, nr_superpixels)
 
-        if cnt>4: break
+        if cnt>2: break
         if cnt%100==0: print("{}/{}".format(cnt, len(folder_list)))
 
 

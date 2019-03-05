@@ -1,9 +1,9 @@
 # ModelFeast
 ModelFeast is more than model zoo!
 It is:
-- [A gather of the most popular 2D, 3D CNN models](https://github.com/daili0015/ModelFeast#if-you-want-to-learn-classic-cnn-models)
-- [A Scaffold to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast#if-you-want-to-train-model)
-- [A pytorch project template](https://github.com/daili0015/ModelFeast/blob/master/template.md#if-you-want-to-use-the-pytorch-project-template)
+- [A gather of the most popular 2D, 3D CNN models](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
+- [A Scaffold to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
+- [A pytorch project template](https://github.com/daili0015/ModelFeast/blob/master/tutorials/template.md)
 
 The features are more you could think of:
 - Load data, initialize, train and save model within 3 lines !
@@ -12,31 +12,26 @@ The features are more you could think of:
 - Help you sweep all kinds of classification competitions (convenient api for ensemble learning).
 
 ## Avalible models
-## 2D CNN
-- Xception
-- InceptionV3
-- InceptionResnetV2
-- SqueezeNet1_0, SqueezeNet1_1
-- VGG11,  VGG13, VGG16, VGG19
-- ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
-- ResNext101_32x4d, ResNext101_64x4d
-- DenseNet121, DenseNet169, DenseNet201, DenseNet161
+### 2D CNN
+- [Xception](https://github.com/daili0015/ModelFeast/blob/master/models/classifiers/xception.py)
+- [InceptionV3](https://github.com/daili0015/ModelFeast/blob/master/models/classifiers/inception.py)
+- [InceptionResnetV2](https://github.com/daili0015/ModelFeast/blob/master/models/classifiers/inceptionresnetv2.py)
+- [SqueezeNet1_0, SqueezeNet1_1](https://github.com/daili0015/ModelFeast/blob/master/models/classifiers/squeezenet.py)
+- [VGG11,  VGG13, VGG16, VGG19](https://github.com/daili0015/ModelFeast/blob/master/models/classifiers/vgg.py)
+- [ResNet18, ResNet34, ResNet50, ResNet101, ResNet152](https://github.com/daili0015/ModelFeast/blob/master/models/classifiers/resnet.py)
+- [ResNext101_32x4d, ResNext101_64x4d](https://github.com/daili0015/ModelFeast/blob/master/models/classifiers/resnext.py)
+- [DenseNet121, DenseNet169, DenseNet201, DenseNet161](https://github.com/daili0015/ModelFeast/blob/master/models/classifiers/densenet.py)
 
-## 3D CNN
-- resnet18v2_3d, resnet34v2_3d, resnet50v2_3d, resnet101v2_3d, resnet152v2_3d, resnet200v2_3d
-- resnext50_3d, resnext101_3d, resnext152_3d
-- densenet121_3d, densenet169_3d, densenet201_3d, densenet264_3d
-- resnet10_3d, resnet18_3d, resnet34_3d, resnet101_3d, resnet152_3d, resnet200_3d
-- wideresnet50_3d
-- i3d50, i3d101, i3d152
+### 3D CNN
+- [resnet18v2_3d, resnet34v2_3d, resnet50v2_3d, resnet101v2_3d, resnet152v2_3d, resnet200v2_3d](https://github.com/daili0015/ModelFeast/blob/master/models/StereoCNN/resnetv2.py)
+- [resnext50_3d, resnext101_3d, resnext152_3d](https://github.com/daili0015/ModelFeast/blob/master/models/StereoCNN/resnext.py)
+- [densenet121_3d, densenet169_3d, densenet201_3d, densenet264_3d](https://github.com/daili0015/ModelFeast/blob/master/models/StereoCNN/densenet.py)
+- [resnet10_3d, resnet18_3d, resnet34_3d, resnet101_3d, resnet152_3d, resnet200_3d](https://github.com/daili0015/ModelFeast/blob/master/models/StereoCNN/resnet.py)
+- [wideresnet50_3d](https://github.com/daili0015/ModelFeast/blob/master/models/StereoCNN/wideresnet.py)
+- [i3d50, i3d101, i3d152](https://github.com/daili0015/ModelFeast/blob/master/models/StereoCNN/i3d.py)
 
-## CNN-RNN
-- resnet18v2_3d, resnet34v2_3d, resnet50v2_3d, resnet101v2_3d, resnet152v2_3d, resnet200v2_3d
-- resnext50_3d, resnext101_3d, resnext152_3d
-- densenet121_3d, densenet169_3d, densenet201_3d, densenet264_3d
-- resnet10_3d, resnet18_3d, resnet34_3d, resnet101_3d, resnet152_3d, resnet200_3d
-- wideresnet50_3d
-- i3d50, i3d101, i3d152
+### CNN-RNN
+This part is still on progress. Not avalible to train now, but model architecture can been seen [here](https://github.com/daili0015/ModelFeast/blob/master/models/CRNN/CRNN_module.py).
 
 
 ## Reference

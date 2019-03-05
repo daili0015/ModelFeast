@@ -11,7 +11,7 @@ print(model)
 ```
 The interface to create a 2D CNN model can be used in the manner:
 ```python
-model = modelname(n_class=10, img_size=(224, 224), pretrained=True, pretrained_path="./pretrained/")
+model = modelname(n_class=10, img_size=256, pretrained=True, pretrained_path="./pretrained/")
 ```
 Check [```./models/__init__.py```](https://github.com/daili0015/ModelFeast/blob/master/models/__init__.py) to see avaliable modelname.
 

@@ -1,7 +1,7 @@
 # ModelFeast
 [中文版readme](https://github.com/daili0015/ModelFeast/blob/master/README_cn.md)
 
-ModelFeast is more than model-zoo based on pytorch!
+ModelFeast is more than model-zoo!
 It is:
 - [A gather of the most popular 2D, 3D CNN models](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
 - [A tool to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)

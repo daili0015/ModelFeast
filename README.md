@@ -1,9 +1,9 @@
 # ModelFeast
 [中文版readme](https://github.com/daili0015/ModelFeast/blob/master/README_cn.md)
 
-ModelFeast is more than model-zoo!
 Please star ModelFeast if it helps you. This is very important to me! Thanks very much !
 
+ModelFeast is more than model-zoo!
 It is:
 - [A gather of the most popular 2D, 3D CNN models](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
 - [A tool to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
@@ -34,12 +34,14 @@ It is:
 ### CNN-RNN
 This part is still on progress. Not avalible to train now, but model architecture can been seen [here](https://github.com/daili0015/ModelFeast/blob/master/models/CRNN/CRNN_module.py).
 
-
 ## Get started
 Determine what you need and read corresponding tutorials
 - [I want to train a model as simple as possible](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
 - [I just need the codes of CNNs ](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
 - [I need a standard pytorch project template](https://github.com/daili0015/ModelFeast/blob/master/tutorials/template.md)
+
+Or you can using modelfeast via pip !
+pip guide
 
 ## Features
 The features are more than you could think of:

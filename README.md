@@ -36,7 +36,7 @@ This part is still on progress. Not avalible to train now, but model architectur
 
 
 ## Get started
-Determine what you need to read corresponding tutorials
+Determine what you need and read corresponding tutorials
 - [I want to train a model as simple as possible](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
 - [I just need the codes of CNNs ](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
 - [I need a standard pytorch project template](https://github.com/daili0015/ModelFeast/blob/master/tutorials/template.md)

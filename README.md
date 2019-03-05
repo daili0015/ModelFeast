@@ -1,9 +1,9 @@
 # ModelFeast
 ModelFeast is more than model zoo!
 It is:
-- A pytorch project template.
-- A gather of the most popular 2D, 3D CNN models.
-- A Scaffold to make deep learn much more simply and flexibly.
+- [A pytorch project template](https://github.com/daili0015/ModelFeast#if-you-want-to-use-the-pytorch-project-template)
+- [A gather of the most popular 2D, 3D CNN models](https://github.com/daili0015/ModelFeast#if-you-want-to-learn-classic-cnn-models)
+- [A Scaffold to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast#if-you-want-to-train-model)
 
 The features are more you could think of:
 - Load data, initialize, train and save model within 3 lines !
@@ -51,7 +51,7 @@ This part is still on progress. Not avalible to train now, but model architectur
 For example, you can put image dataset in a folder.
 I put it here: ```E:/Oxford_Flowers17/train```
 <center>
-<img src="tutorials/datase_path.png" width="90%" height="40%" />
+<img src="tutorials/datase_path.png" width="40%" height="20%" />
 </center>
 Here are some datasets available:
 

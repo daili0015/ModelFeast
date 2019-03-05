@@ -34,6 +34,13 @@ It is:
 ### CNN-RNN
 This part is still on progress. Not avalible to train now, but model architecture can been seen [here](https://github.com/daili0015/ModelFeast/blob/master/models/CRNN/CRNN_module.py).
 
+
+## Get started
+Determine what you need to read corresponding tutorials
+- [I want to train model as simple as possible](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
+- [I just need the codes of CNNs ](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
+- [I need a standard pytorch project template](https://github.com/daili0015/ModelFeast/blob/master/tutorials/template.md)
+
 ## Features
 The features are more than you could think of:
 - Train and save model within 3 lines !

@@ -4,12 +4,8 @@ import torch.nn.functional as F
 def nll_loss(output, target):
     return F.nll_loss(output, target)
 
-import torch
-w = torch.Tensor([1.5, 2.1])
-# w = torch.Tensor([2.8, 1])
-w = w.cuda()
 def cls_loss(output, target):
-    return F.cross_entropy(output, target, weight=w)  #, weight=w
+    return F.cross_entropy(output, target)  #, weight=w
 
 def mse_loss(output, target):
     target = target.float().unsqueeze(1)

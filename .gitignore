@@ -10,12 +10,9 @@ __pycache__/
 *.zcy0016
 *.tar
 *.dcm
-*.png
-*.jpg
 *.npy
 *.rar
 *.zip
-*.txt
 
 
 # Distribution / packaging

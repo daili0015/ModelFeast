@@ -61,7 +61,9 @@ class Trainer(BaseTrainer):
         total_metrics = np.zeros(len(self.metrics))
         self.optimizer.zero_grad() # for gradient accumulation
 
-        for batch_idx, (data, target) in enumerate(self.data_loader):
+        batch_idx = 0
+        for data, target in self.data_loader:
+            batch_idx += 1
             
             data, target = data.to(self.device), target.to(self.device)
             isUpdateOptim = self.steps_update==1 or (batch_idx+1)%self.steps_update==0

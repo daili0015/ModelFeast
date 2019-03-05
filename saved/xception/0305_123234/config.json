@@ -1,0 +1,59 @@
+{
+    "arch": {
+        "type": "xception",
+        "args": {
+            "n_class": 17,
+            "pretrained": false,
+            "img_size": [
+                200,
+                200
+            ],
+            "pretrained_path": "./pretrained/"
+        }
+    },
+    "loss": "cls_loss",
+    "n_gpu": 1,
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "gamma": 0.2,
+            "step_size": 50
+        }
+    },
+    "trainer": {
+        "log_dir": "saved/runs",
+        "tensorboardX": false,
+        "monitor": "max val_accuracy",
+        "steps_update": 1,
+        "verbosity": 2,
+        "save_dir": "saved/",
+        "save_period": 2,
+        "epochs": 50,
+        "verbose_per_epoch": 100,
+        "early_stop": 10
+    },
+    "name": "xception",
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "weight_decay": 3e-05,
+            "lr": 0.0003
+        }
+    },
+    "metrics": [
+        "accuracy"
+    ],
+    "data_loader": {
+        "type": "AutoDataLoader",
+        "args": {
+            "validation_split": 0.2,
+            "batch_size": 64,
+            "transform": [
+                200,
+                200
+            ],
+            "data_dir": "E:/Oxford_Flowers17/train",
+            "shuffle": true
+        }
+    }
+}

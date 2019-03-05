@@ -3,7 +3,7 @@
 # @Author: zcy
 # @Date:   2019-02-11 11:53:24
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-13 22:37:43
+# @Last Modified time: 2019-03-05 12:43:54
 
 import os
 import json
@@ -142,8 +142,8 @@ class classifier(BaseModel):
 
         # the num of classes in dataset must bet the same as model's output
         if hasattr(self.data_loader, 'classes'):
-            true_classes = len(clf.data_loader.classes)
-            model_output = clf.config['arch']['args']['n_class']
+            true_classes = len(self.data_loader.classes)
+            model_output = self.config['arch']['args']['n_class']
             assert true_classes==model_output, "model分类数为{}，可是实际上有{}个类".format(
                 model_output, true_classes)
 
@@ -174,7 +174,7 @@ class classifier(BaseModel):
             self.config, self.optimizer)
 
 
-    def autoset_dataloader(self, folder, batch_size=32, shuffle=True, validation_split=0.2, 
+    def autoset_dataloader(self, folder, batch_size=16, shuffle=True, validation_split=0.2, 
         num_workers=4, transform = None):
         '''automatic generate data-loader from a given folder'''
 
@@ -188,8 +188,8 @@ class classifier(BaseModel):
 
         true_classes = len(self.data_loader.classes)
         model_output = self.config['arch']['args']['n_class']
-        assert true_classes==model_output, "model分类数为{}，可是实际上有{}个类".format(
-            model_output, true_classes)
+        assert true_classes==model_output, "model output {} classes，but there are {} classes in dataset"\
+        .format(model_output, true_classes)
         self.config["data_loader"] = {"type":self.data_loader.__class__.__name__}
         self.config["data_loader"]['args'] = {"data_dir": folder}
         self.config["data_loader"]['args']['batch_size'] = batch_size
@@ -200,7 +200,7 @@ class classifier(BaseModel):
 
         # self.config["data_loader"]["class_to_idx"] = self.data_loader.class_to_idx
 
-    def set_trainer(self, epochs=50, save_dir="saved/", save_period=2, verbosity=2, 
+    def set_trainer(self, epochs=20, save_dir="saved/", save_period=2, verbosity=2, 
         verbose_per_epoch=100, monitor = "max val_accuracy", early_stop=10, 
         tensorboardX=False, log_dir="saved/runs", steps_update=1):
         self.config["trainer"] = {"epochs":epochs, "save_dir":save_dir, "save_period":save_period,

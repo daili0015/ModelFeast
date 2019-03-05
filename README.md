@@ -42,8 +42,13 @@ The features are more than you could think of:
 
 ## Reference
 [https://github.com/lanpa/tensorboardX](https://github.com/lanpa/tensorboardX)
+
 [https://github.com/pytorch/vision/tree/master/torchvision/models](https://github.com/pytorch/vision/tree/master/torchvision/models)
+
 [https://github.com/kenshohara/3D-ResNets-PyTorch](https://github.com/kenshohara/3D-ResNets-PyTorch)
+
 [https://github.com/victoresque/pytorch-template](https://github.com/victoresque/pytorch-template)
+
 [https://github.com/AlexHex7/Non-local_pytorch](https://github.com/AlexHex7/Non-local_pytorch)
+
 [https://github.com/Cadene/pretrained-models.pytorch](https://github.com/Cadene/pretrained-models.pytorch)

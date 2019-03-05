@@ -104,8 +104,8 @@ class Trainer(BaseTrainer):
         if self.lr_scheduler is not None:
             self.lr_scheduler.step()
 
-        print("cal_f1_score val")
-        self.cal_f1_score(dataset='val')
+        # print("cal_f1_score val")
+        # self.cal_f1_score(dataset='val')
         # print("cal_f1_score train")
         # self.cal_f1_score(dataset='train')
 

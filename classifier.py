@@ -165,6 +165,7 @@ class classifier(BaseModel):
     def set_optimizer(self, name="Adam", **kwargs):
         self.config["optimizer"] = {"type": name, "args":kwargs}
         optimizer_params = filter(lambda p: p.requires_grad, self.model.parameters())
+        # print(len(list(optimizer_params)))
         self.optimizer = get_instance(torch.optim, 'optimizer', self.config, optimizer_params)
 
     def set_lr_scheduler(self, name="StepLR", **kwargs):

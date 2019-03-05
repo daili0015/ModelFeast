@@ -173,20 +173,36 @@ class DenseNet(nn.Module):
         return out
 
 
-def densenet121_3d(**kwargs):
-    model = DenseNet(
-        growth_rate=32,
-        block_config=(6, 12, 24, 16),
-        **kwargs)
-    return model
+
 
 if __name__ == '__main__':
+    def densenet121_3d(**kwargs):
+        model = DenseNet(
+            growth_rate=32,
+            block_config=(6, 12, 24, 16),
+            **kwargs)
+        return model
+
+    def densenet169_3d(**kwargs):
+        model = DenseNet(
+            growth_rate=32,
+            block_config=(6, 12, 32, 32),
+            **kwargs)
+        return model
+
+    def densenet201_3d(**kwargs):
+        model = DenseNet(
+            growth_rate=32,
+            block_config=(6, 12, 48, 32),
+            **kwargs)
+        return model
+    
     a = 64
     img_size=(a, a)
-    model = densenet121_3d(n_classes=2, in_channels=1)
-    x = torch.randn(3, 1, 30, img_size[0], img_size[1])
+    model = densenet201_3d(n_classes=2, in_channels=1)
+    # x = torch.randn(3, 1, 30, img_size[0], img_size[1])
     # (BatchSize, channels, depth, h, w)
-    y = model.cal_features(x)
+    # y = model.cal_features(x)
+    torch.save(model.state_dict(), 'm.pth')
 
-    print(y.size())
 

@@ -1,8 +1,10 @@
 # ModelFeast
 最全面的 pytorch 模型库（2D， 3D CNN）!
+如果您觉得有用，请给一个star或fork！ 现在很需要star！谢谢~
+
 - [收录了时下最流行的 2D, 3D CNN 模型库](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
 - [简化pytorch训练，保护发际线！](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
-- [一个可移植的pytorch项目模板](https://github.com/daili0015/ModelFeast/blob/master/tutorials/template.md)
+- [可移植的pytorch项目模板](https://github.com/daili0015/ModelFeast/blob/master/tutorials/template.md)
 
 ## What is ModelFeast ?
 假如说 model zoo 是这样的—

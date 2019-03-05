@@ -2,6 +2,8 @@
 [中文版readme](https://github.com/daili0015/ModelFeast/blob/master/README_cn.md)
 
 ModelFeast is more than model-zoo!
+Please star ModelFeast if it helps you. This is very important to me! Thanks very much !
+
 It is:
 - [A gather of the most popular 2D, 3D CNN models](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
 - [A tool to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)

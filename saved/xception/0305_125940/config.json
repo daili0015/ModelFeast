@@ -1,0 +1,59 @@
+{
+    "lr_scheduler": {
+        "args": {
+            "step_size": 50,
+            "gamma": 0.2
+        },
+        "type": "StepLR"
+    },
+    "arch": {
+        "args": {
+            "img_size": [
+                60,
+                60
+            ],
+            "n_class": 17,
+            "pretrained": false,
+            "pretrained_path": "./pretrained/"
+        },
+        "type": "xception"
+    },
+    "name": "xception",
+    "data_loader": {
+        "args": {
+            "data_dir": "/home/TensorFlow/keras/flowers17-tsycnh package/flowers17/train",
+            "shuffle": true,
+            "transform": [
+                60,
+                60
+            ],
+            "batch_size": 64,
+            "validation_split": 0.2
+        },
+        "type": "AutoDataLoader"
+    },
+    "loss": "cls_loss",
+    "metrics": [
+        "accuracy"
+    ],
+    "n_gpu": 1,
+    "trainer": {
+        "save_period": 1,
+        "verbosity": 2,
+        "epochs": 1,
+        "log_dir": "saved/runs",
+        "monitor": "max val_accuracy",
+        "verbose_per_epoch": 100,
+        "early_stop": 10,
+        "save_dir": "saved/",
+        "steps_update": 1,
+        "tensorboardX": false
+    },
+    "optimizer": {
+        "args": {
+            "lr": 0.0003,
+            "weight_decay": 3e-05
+        },
+        "type": "Adam"
+    }
+}

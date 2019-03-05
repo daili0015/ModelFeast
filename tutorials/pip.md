@@ -56,8 +56,7 @@ class FuckerNet(nn.Module):
 
 if __name__ == '__main__':
 
-	model = FuckerNet()
-    clf = classifier(model=model, 17, (30, 30), 'E:/Oxford_Flowers17/train')
+    clf = classifier(model=FuckerNet(), 17, (30, 30), 'E:/Oxford_Flowers17/train')
     clf.train()
 
 ```

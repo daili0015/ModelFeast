@@ -30,23 +30,33 @@ You can define a model on your own, and train it using ```classifier```.
 from modelfeast import *
 from torch import nn
 
-class FireNet(nn.Module):
-	def __init__(self, in_dim, hidden_dim, out_dim):
-		super(dai_Net, self).__init__()
-		self.layer1 = nn.Conv2d(3, 8)
-		self.layer2 = nn.Tanh()
-		self.layer3 = nn.Linear(8, 16)
-		self.layer4 = nn.Sigmoid()
-	def forward(self, x):
-		fx = self.layer1(x)
-		fx = self.layer2(fx)
-		fx = self.layer3(fx)
-		fx = self.layer4(fx)
-		return fx
+#define your own model
+class FuckerNet(nn.Module):
+
+    def __init__(self):
+        super(dal_BN, self).__init__()
+        self.sq1 = nn.Sequential(
+            nn.Conv2d(1, 6, 3, padding = 1),
+            nn.BatchNorm2d(6),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),
+
+            nn.Conv2d(6, 16, 5), #padding = 0 , stride=1,默认
+            nn.BatchNorm2d(16),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)
+            )
+        self.linear = nn.Linear(400 ,10) 
+
+    def forward(self, x):
+        x = self.sq1(x)
+        y = self.linear(x.view(x.shape[0], -1))
+        return y
+
 
 if __name__ == '__main__':
 
-	model = FireNet()
+	model = FuckerNet()
     clf = classifier(model=model, 17, (30, 30), 'E:/Oxford_Flowers17/train')
     clf.train()
 

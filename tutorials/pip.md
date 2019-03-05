@@ -53,7 +53,6 @@ class FuckerNet(nn.Module):
         y = self.linear(x.view(x.shape[0], -1))
         return y
 
-
 if __name__ == '__main__':
 
     clf = classifier(model=FuckerNet(), 17, (30, 30), 'E:/Oxford_Flowers17/train')

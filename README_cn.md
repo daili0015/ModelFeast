@@ -52,7 +52,7 @@
 - 经典的2D CNN， 3D CNN全部都有 !
 - 任意大小的图像尺寸输入都OK !
 - 帮助你横扫各种项目与竞赛，这是我用modelfeast[参加的一个竞赛](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md#2-3d-convolutional-neural-network)，第三周周榜第9名！该比赛还在进行 
-- 更多集成学习、模型融合方法，comming soon！我已经与主办方商量好了，上面的比赛结束后（3月底），我会写一个教程，介绍我是怎么用modelfeast跑出第9名的成绩的；还会有医学图像处理、集成学习大礼包，直接给源代码，还有详细的注释与讲解！
+- 更多集成学习、模型融合方法，comming soon！我已经与平台的小姐姐商量好了，上面的比赛结束后（3月底），我会写一个教程，介绍我是怎么用modelfeast跑出第9名的成绩的；还会有医学图像处理、集成学习大礼包，直接给源代码，还有详细的注释与讲解！
 
 
 ## 参考资源

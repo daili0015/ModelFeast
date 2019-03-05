@@ -4,7 +4,7 @@
 For example, you can put image dataset in a folder.
 I put it here: ```E:/Oxford_Flowers17/train```
 <center>
-<img src="tutorials/datase_path.png" width="80%" height="34%" />
+<img src="datase_path.png" width="80%" height="34%" />
 </center>
 Here are some datasets available:
 
@@ -22,7 +22,7 @@ if __name__ == '__main__': # removing this line brings dataloader error, this is
     clf = classifier('xception', 17, (200, 200), 'E:/Oxford_Flowers17/train')
     clf.train()
 ```
-It will begin to train a Xception with dataloader with 17 classes, resize image to 200*200, load data from ```'E:/Oxford_Flowers17/train'```. Best model will be saved to folder ```"./saved"```every 2 epoch. To know more about default setting, click [here](https://pan.baidu.com/s/1cDdfb8vJnZTPt-w3lMMulQ).
+It will begin to train a Xception with dataloader with 17 classes, resize image to 200*200, load data from ```'E:/Oxford_Flowers17/train'```. Best model will be saved to folder ```"./saved"```every 2 epoch. To know more about default setting, click [here](https://github.com/daili0015/ModelFeast/blob/master/classifier.py#L59).
 #### Or resume previous training
 ```python
 if __name__ == '__main__':

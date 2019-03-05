@@ -2,14 +2,11 @@
 ModelFeast is more than model zoo!
 It is:
 - [A gather of the most popular 2D, 3D CNN models](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md)
-- [A Scaffold to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
+- [A tool to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
 - [A pytorch project template](https://github.com/daili0015/ModelFeast/blob/master/tutorials/template.md)
 
-The features are more you could think of:
-- Load data, initialize, train and save model within 3 lines !
-- Include the most popular 2D CNN, 3D CNN, and CRNN models !
--  Allow any input image size (pytorch official model zoo limit your input size harshly) !
-- Help you sweep all kinds of classification competitions (convenient api for ensemble learning).
+## What is ModelFeast ?
+Let's make it as simple as possible.
 
 ## Avalible models
 ### 2D CNN
@@ -32,6 +29,13 @@ The features are more you could think of:
 
 ### CNN-RNN
 This part is still on progress. Not avalible to train now, but model architecture can been seen [here](https://github.com/daili0015/ModelFeast/blob/master/models/CRNN/CRNN_module.py).
+
+## Features
+The features are more than you could think of:
+- Load data, initialize, train and save model within 3 lines !
+- Include the most popular 2D CNN, 3D CNN, and CRNN models !
+-  Allow any input image size (pytorch official model zoo limit your input size harshly) !
+- Help you sweep all kinds of classification competitions (convenient api for ensemble learning).
 
 
 ## Reference

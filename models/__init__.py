@@ -3,7 +3,7 @@
 # @Author: zcy
 # @Date:   2019-01-31 21:15:37
 # @Last Modified by:   zcy
-# @Last Modified time: 2019-02-15 15:29:28
+# @Last Modified time: 2019-03-05 13:25:26
 
 ''' image classifiers models '''
 from .classifiers.densenet import *
@@ -20,7 +20,6 @@ from .StereoCNN.resnext import *
 from .StereoCNN.densenet import *
 from .StereoCNN.resnet import *
 from .StereoCNN.wideresnet import *
-from .StereoCNN.c1wideresnet import *
 from .StereoCNN.i3d import *
 
 __all__ = [ 
@@ -45,8 +44,6 @@ __all__ = [
             'resnet101_3d', 'resnet152_3d', 'resnet200_3d', 
 
             'wideresnet50_3d',
-
-            'c1wideresnet18_3d', 'c1wideresnet50_3d', 'c1wideresnet101_3d', 
 
             'i3d50', 'i3d101', 'i3d152',           
             ]

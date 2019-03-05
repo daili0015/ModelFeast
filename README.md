@@ -35,6 +35,7 @@ This part is still on progress. Not avalible to train now, but model architectur
 ## Features
 The features are more than you could think of:
 - Train and save model within 3 lines !
+- Multi GPU support !
 - Include the most popular 2D CNN, 3D CNN, and CRNN models !
 -  Allow any input image size (pytorch official model zoo limit your input size harshly) !
 - Help you sweep all kinds of [classification competitions](https://github.com/daili0015/ModelFeast/blob/master/tutorials/ModelZoo.md#2-3d-convolutional-neural-network).

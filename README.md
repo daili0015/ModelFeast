@@ -7,7 +7,7 @@ It is:
 - [A tool to make deep learn much more simply and flexibly](https://github.com/daili0015/ModelFeast/blob/master/tutorials/Scaffold.md)
 - [A pytorch project template](https://github.com/daili0015/ModelFeast/blob/master/tutorials/template.md)
 
-[What is ModelFeast](https://github.com/daili0015/ModelFeast/blob/master/tutorials/what'sit.md) ?
+[What is ModelFeast ?](https://github.com/daili0015/ModelFeast/blob/master/tutorials/what'sit.md)
 
 
 ## Avalible models

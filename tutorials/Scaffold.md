@@ -4,7 +4,7 @@
 For example, you can put image dataset in a folder.
 I put it here: ```E:/Oxford_Flowers17/train```
 <center>
-<img src="datase_path.png" width="80%" height="34%" />
+<img src="datase_path.png" width="60%" height="24%" />
 </center>
 Here are some datasets available:
 
@@ -18,6 +18,7 @@ ps: Of course you can define dataloader on your own!
 ### 2. Train  within 3 lines
 #### You can train from zero
 ```python
+from classifier import classifier
 if __name__ == '__main__': # removing this line brings dataloader error, this is because of python's multithread feature
     clf = classifier('xception', 17, (200, 200), 'E:/Oxford_Flowers17/train')
     clf.train()
@@ -25,6 +26,7 @@ if __name__ == '__main__': # removing this line brings dataloader error, this is
 It will begin to train a Xception with dataloader with 17 classes, resize image to 200*200, load data from ```'E:/Oxford_Flowers17/train'```. Best model will be saved to folder ```"./saved"```every 2 epoch. To know more about default setting, click [here](https://github.com/daili0015/ModelFeast/blob/master/classifier.py#L59).
 #### Or resume previous training
 ```python
+from classifier import classifier
 if __name__ == '__main__':
     clf = classifier('xception', 17, (60, 60), 'E:/Oxford_Flowers17/train')
     clf.train_from('E:/ModelFeast/saved/xception/0305_130143/checkpoint_best.pth')

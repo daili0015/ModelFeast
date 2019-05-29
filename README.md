@@ -70,4 +70,4 @@ The features are more than you could think of:
 [https://github.com/Cadene/pretrained-models.pytorch](https://github.com/Cadene/pretrained-models.pytorch)
 
 
-[https://www.zhengchengyao.com/](my home page)
+[https://www.zhengchengyao.com/] (my home page 我的个人主页)
